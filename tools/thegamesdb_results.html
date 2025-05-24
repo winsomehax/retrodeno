@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TheGamesDB Search Results</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <style>
+        body { background: #f5f5f5; color: #222; font-family: 'Roboto', Arial, sans-serif; margin: 0; padding: 0; min-height: 100vh; }
+        .main-title { margin-top: 48px; font-weight: 500; letter-spacing: 1px; }
+        .cover-thumb {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 6px;
+            background: #eee;
+        }
+        .container { margin-top:48px; max-width:1200px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h4 class="main-title blue-text text-darken-2" style="margin-bottom:24px;">TheGamesDB Search Results</h4>
+
+        <table class="highlight responsive-table">
+            <thead>
+                <tr>
+                    <th>Cover</th>
+                    <th>Game Title</th>
+                    <th>Release Date</th>
+                    <th>Platform ID</th>
+                    <th>TheGamesDB ID</th>
+                </tr>
+            </thead>
+            <tbody id="resultsTableBody">
+                <!-- Results will be populated here -->
+            </tbody>
+        </table>
+        <div id="loadingIndicator" class="progress" style="display: none; margin-top: 20px;">
+            <div class="indeterminate"></div>
+        </div>
+        <p id="errorMessage" class="red-text" style="display: none;"></p>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        const jsonData = {
+          "code": 200, "status": "Success",
+          "data": {
+            "count": 20,
+            "games": [
+              { "id": 108139, "game_title": "The Legend of Zelda: A Link to the Past - Master Quest", "release_date": "2018-02-01", "platform": 6 },
+              { "id": 129885, "game_title": "Zelda: The Legend of Link", "release_date": "2016-07-18", "platform": 7 },
+              { "id": 40126, "game_title": "The Legend of Zelda", "release_date": "1989-08-26", "platform": 4950 },
+              { "id": 126191, "game_title": "Zelda II: The Adventure of Link (Nintendo Switch Online)", "release_date": "2019-01-16", "platform": 4971 },
+              { "id": 61737, "game_title": "Zelda II: The Adventure of Link [Classic Series]", "release_date": "1988-12-01", "platform": 7 },
+              { "id": 49433, "game_title": "Zelda II: The Adventure of Link", "release_date": "2013-09-12", "platform": 38 },
+              { "id": 67886, "game_title": "Zelda II - The Adventure of Link", "release_date": "2012-11-22", "platform": 4912 },
+              { "id": 96036, "game_title": "Zelda 2 Redux", "release_date": "1970-01-01", "platform": 7 },
+              { "id": 81472, "game_title": "The Legend of Zelda: A Link to the Past (MSU-1)", "release_date": "2015-06-09", "platform": 6 },
+              { "id": 66947, "game_title": "Zelda 64: Dawn & Dusk", "release_date": "2019-09-22", "platform": 3 },
+              { "id": 89769, "game_title": "Zelda Breath Of The Wild [First Print]", "release_date": "2017-03-03", "platform": 38 },
+              { "id": 82386, "game_title": "The Legend of Zelda: Outlands", "release_date": "2001-05-15", "platform": 7 },
+              { "id": 80714, "game_title": "Zelda Dream Hourglass", "release_date": "2020-10-30", "platform": 7 },
+              { "id": 130185, "game_title": "The Legend of Zelda: Expansion Disk", "release_date": "2021-12-24", "platform": 3 },
+              { "id": 94998, "game_title": "Zelda II: Amida's Curse", "release_date": "2021-10-27", "platform": 7 },
+              { "id": 129591, "game_title": "Zelda II Resurrection of Ganon", "release_date": "2021-01-17", "platform": 7 },
+              { "id": 107342, "game_title": "Zelda II: The Nightmare of Ganon", "release_date": "2018-02-05", "platform": 7 },
+              { "id": 120384, "game_title": "Zelda II: Boss Endurance", "release_date": "2017-01-11", "platform": 7 },
+              { "id": 110757, "game_title": "Zelda II: Journey of a Day", "release_date": "2013-08-07", "platform": 7 },
+              { "id": 119523, "game_title": "Zelda II: Ocarina of Time", "release_date": "2022-05-13", "platform": 7 }
+            ]
+          },
+          "include": {
+            "boxart": {
+              "base_url": { "original": "https://cdn.thegamesdb.net/images/original/", "small": "https://cdn.thegamesdb.net/images/small/", "thumb": "https://cdn.thegamesdb.net/images/thumb/", "cropped_center_thumb": "https://cdn.thegamesdb.net/images/cropped_center_thumb/", "medium": "https://cdn.thegamesdb.net/images/medium/", "large": "https://cdn.thegamesdb.net/images/large/" },
+              "data": {
+                "40126": [{ "id": 110289, "type": "boxart", "side": "back", "filename": "boxart/back/40126-1.jpg" }, { "id": 424871, "type": "boxart", "side": "front", "filename": "boxart/front/40126-1.jpg" }],
+                "49433": [{ "id": 126436, "type": "boxart", "side": "front", "filename": "boxart/front/49433-1.png" }],
+                "61737": [{ "id": 305778, "type": "boxart", "side": "front", "filename": "boxart/front/61737-1.jpg" }],
+                "66947": [{ "id": 218446, "type": "boxart", "side": "front", "filename": "boxart/front/66947-1.jpg" }],
+                "67886": [{ "id": 220211, "type": "boxart", "side": "front", "filename": "boxart/front/67886-1.jpg" }],
+                "80714": [{ "id": 261740, "type": "boxart", "side": "front", "filename": "boxart/front/80714-1.jpg" }],
+                "81472": [{ "id": 264871, "type": "boxart", "side": "front", "filename": "boxart/front/81472-1.jpg" }],
+                "82386": [{ "id": 384910, "type": "boxart", "side": "front", "filename": "boxart/front/82386-1.jpg" }],
+                "89769": [{ "id": 298498, "type": "boxart", "side": "front", "filename": "boxart/front/89769-1.jpg" }, { "id": 298499, "type": "boxart", "side": "back", "filename": "boxart/back/89769-1.jpg" }],
+                "94998": [{ "id": 320398, "type": "boxart", "side": "front", "filename": "boxart/front/94998-1.jpg" }],
+                "96036": [{ "id": 324824, "type": "boxart", "side": "front", "filename": "boxart/front/96036-1.jpg" }],
+                "107342":[{ "id": 450922, "type": "boxart", "side": "front", "filename": "boxart/front/107342-1.jpg" }],
+                "108139":[{ "id": 408045, "type": "boxart", "side": "front", "filename": "boxart/front/108139-1.jpg" }],
+                "110757":[{ "id": 379846, "type": "boxart", "side": "front", "filename": "boxart/front/110757-1.jpg" }],
+                "119523":[{ "id": 409331, "type": "boxart", "side": "front", "filename": "boxart/front/119523-1.jpg" }],
+                "120384":[{ "id": 413788, "type": "boxart", "side": "front", "filename": "boxart/front/120384-1.jpg" }],
+                "126191":[{ "id": 437621, "type": "boxart", "side": "front", "filename": "boxart/front/126191-1.jpg" }],
+                "129591":[{ "id": 451612, "type": "boxart", "side": "front", "filename": "boxart/front/129591-1.jpg" }],
+                "129885":[{ "id": 452902, "type": "boxart", "side": "front", "filename": "boxart/front/129885-1.jpg" }],
+                "130185":[{ "id": 456912, "type": "boxart", "side": "front", "filename": "boxart/front/130185-1.jpg" }]
+              }
+            }
+          }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const tableBody = document.getElementById('resultsTableBody');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const errorMessage = document.getElementById('errorMessage');
+
+            if (!jsonData || !jsonData.data || !jsonData.data.games) {
+                errorMessage.textContent = 'Error: Invalid data format or no games found.';
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            loadingIndicator.style.display = 'block';
+
+            const games = jsonData.data.games;
+            const boxartBaseUrl = jsonData.include?.boxart?.base_url?.thumb || jsonData.include?.boxart?.base_url?.small || '';
+            const boxartData = jsonData.include?.boxart?.data || {};
+
+            games.forEach(game => {
+                const row = tableBody.insertRow();
+
+                let coverImageUrl = '/img/default-cover.png'; // Default image
+                const gameBoxartArray = boxartData[game.id.toString()];
+                if (gameBoxartArray && boxartBaseUrl) {
+                    const frontBoxart = gameBoxartArray.find(art => art.type === 'boxart' && art.side === 'front');
+                    if (frontBoxart && frontBoxart.filename) {
+                        coverImageUrl = boxartBaseUrl + frontBoxart.filename;
+                    }
+                }
+
+                row.insertCell().innerHTML = `<img src="${coverImageUrl}" alt="${game.game_title}" class="cover-thumb" onerror="this.src='/img/default-cover.png';">`;
+                row.insertCell().textContent = game.game_title || 'N/A';
+                row.insertCell().textContent = game.release_date || 'N/A';
+                row.insertCell().textContent = game.platform || 'N/A';
+                row.insertCell().textContent = game.id || 'N/A';
+            });
+
+            loadingIndicator.style.display = 'none';
+            if (games.length === 0) {
+                errorMessage.textContent = 'No games found in the results.';
+                errorMessage.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

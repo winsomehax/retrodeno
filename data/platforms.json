@@ -1,0 +1,853 @@
+[
+  {
+    "id": "3do",
+    "name": "3DO",
+    "thegamesdb_id": 25,
+    "icon_tgdb": "3do-1336524121.png"
+  },
+  {
+    "id": "action-max",
+    "name": "Action Max",
+    "thegamesdb_id": 4976,
+    "icon_tgdb": "action_max.png"
+  },
+  {
+    "id": "acorn-archimedes",
+    "name": "Acorn Archimedes",
+    "thegamesdb_id": 4944,
+    "icon_tgdb": "acorn-archimedes-1446690349.png"
+  },
+  {
+    "id": "acorn-atom",
+    "name": "Acorn Atom",
+    "thegamesdb_id": 5014
+  },
+  {
+    "id": "acorn-electron",
+    "name": "Acorn Electron",
+    "thegamesdb_id": 4954,
+    "icon_tgdb": "acorn-electron-1468269141.png"
+  },
+  {
+    "id": "amiga",
+    "name": "Amiga",
+    "thegamesdb_id": 4911,
+    "icon_tgdb": "amiga-1336524133.png"
+  },
+  {
+    "id": "amiga-cd32",
+    "name": "Amiga CD32",
+    "thegamesdb_id": 4947,
+    "icon_tgdb": "amiga-cd32-1447024303.png"
+  },
+  {
+    "id": "amstrad-cpc",
+    "name": "Amstrad CPC",
+    "thegamesdb_id": 4914,
+    "icon_tgdb": "amstrad-cpc-1393097665.png"
+  },
+  {
+    "id": "amstrad-gx4000",
+    "name": "Amstrad GX4000",
+    "thegamesdb_id": 4999
+  },
+  {
+    "id": "android",
+    "name": "Android",
+    "thegamesdb_id": 4916,
+    "icon_tgdb": "4916-1393096477.png"
+  },
+  {
+    "id": "apf-mp-1000",
+    "name": "APF MP-1000",
+    "thegamesdb_id": 4969,
+    "icon_tgdb": "apf_mp1000.png"
+  },
+  {
+    "id": "apple-ii",
+    "name": "Apple II",
+    "thegamesdb_id": 4942,
+    "icon_tgdb": "apple2-1446583849.png"
+  },
+  {
+    "id": "apple-pippin",
+    "name": "Apple Pippin",
+    "thegamesdb_id": 5001
+  },
+  {
+    "id": "arcade",
+    "name": "Arcade",
+    "thegamesdb_id": 23,
+    "icon_tgdb": "arcade-1336524196.png"
+  },
+  {
+    "id": "atari-2600",
+    "name": "Atari 2600",
+    "thegamesdb_id": 22,
+    "icon_tgdb": "atari-2600-1336524261.png"
+  },
+  {
+    "id": "atari-5200",
+    "name": "Atari 5200",
+    "thegamesdb_id": 26,
+    "icon_tgdb": "atari-5200-1393096687.png"
+  },
+  {
+    "id": "atari-7800",
+    "name": "Atari 7800",
+    "thegamesdb_id": 27,
+    "icon_tgdb": "atari-7800-1393096747.png"
+  },
+  {
+    "id": "atari800",
+    "name": "Atari 800",
+    "thegamesdb_id": 4943,
+    "icon_tgdb": "atari800-1446587367.png"
+  },
+  {
+    "id": "atari-jaguar",
+    "name": "Atari Jaguar",
+    "thegamesdb_id": 28,
+    "icon_tgdb": "atari-jaguar-1336524288.png"
+  },
+  {
+    "id": "atari-jaguar-cd",
+    "name": "Atari Jaguar CD",
+    "thegamesdb_id": 29,
+    "icon_tgdb": "atari-jaguar-cd-1336524356.png"
+  },
+  {
+    "id": "atari-lynx",
+    "name": "Atari Lynx",
+    "thegamesdb_id": 4924,
+    "icon_tgdb": "atari-lynx-1393097977.png"
+  },
+  {
+    "id": "atari-st",
+    "name": "Atari ST",
+    "thegamesdb_id": 4937,
+    "icon_tgdb": "atari-st-1445259571.png"
+  },
+  {
+    "id": "atari-xe",
+    "name": "Atari XE",
+    "thegamesdb_id": 30,
+    "icon_tgdb": "atari-xe-1393098372.png"
+  },
+  {
+    "id": "bbc-bridge-companion",
+    "name": "BBC Bridge Companion",
+    "thegamesdb_id": 4997
+  },
+  {
+    "id": "bbc-micro",
+    "name": "BBC Micro",
+    "thegamesdb_id": 5013
+  },
+  {
+    "id": "bally-astrocade",
+    "name": "Bally Astrocade",
+    "thegamesdb_id": 4968
+  },
+  {
+    "id": "bandai-tv-jack-5000",
+    "name": "Bandai TV Jack 5000",
+    "thegamesdb_id": 4995
+  },
+  {
+    "id": "casio-loopy",
+    "name": "Casio Loopy",
+    "thegamesdb_id": 4991
+  },
+  {
+    "id": "casio-pv-1000",
+    "name": "Casio PV-1000",
+    "thegamesdb_id": 4964
+  },
+  {
+    "id": "coleco-telstar-arcade",
+    "name": "Coleco Telstar Arcade",
+    "thegamesdb_id": 4970
+  },
+  {
+    "id": "colecovision",
+    "name": "Colecovision",
+    "thegamesdb_id": 31,
+    "icon_tgdb": "colecovision-1393096902.png"
+  },
+  {
+    "id": "c128",
+    "name": "Commodore 128",
+    "thegamesdb_id": 4946,
+    "icon_tgdb": "c128-1446691445.png"
+  },
+  {
+    "id": "commodore-16",
+    "name": "Commodore 16",
+    "thegamesdb_id": 5006
+  },
+  {
+    "id": "commodore-64",
+    "name": "Commodore 64",
+    "thegamesdb_id": 40,
+    "icon_tgdb": "commodore-64-1393096937.png"
+  },
+  {
+    "id": "commodore-pet",
+    "name": "Commodore PET",
+    "thegamesdb_id": 5008
+  },
+  {
+    "id": "commodore-plus-4",
+    "name": "Commodore Plus/4",
+    "thegamesdb_id": 5007
+  },
+  {
+    "id": "commodore-vic20",
+    "name": "Commodore VIC-20",
+    "thegamesdb_id": 4945,
+    "icon_tgdb": "commodore-vic20-1446691509.png"
+  },
+  {
+    "id": "didj",
+    "name": "Didj",
+    "thegamesdb_id": 5012
+  },
+  {
+    "id": "dragon32-64",
+    "name": "Dragon 32/64",
+    "thegamesdb_id": 4952,
+    "icon_tgdb": "dragon32-64-1449254358.png"
+  },
+  {
+    "id": "emerson-arcadia-2001",
+    "name": "Emerson Arcadia 2001",
+    "thegamesdb_id": 4963
+  },
+  {
+    "id": "entex-adventure-vision",
+    "name": "Entex Adventure Vision",
+    "thegamesdb_id": 4974
+  },
+  {
+    "id": "entex-select-a-game",
+    "name": "Entex Select-a-Game",
+    "thegamesdb_id": 4973
+  },
+  {
+    "id": "epoch-cassette-vision",
+    "name": "Epoch Cassette Vision",
+    "thegamesdb_id": 4965
+  },
+  {
+    "id": "epoch-super-cassette-vision",
+    "name": "Epoch Super Cassette Vision",
+    "thegamesdb_id": 4966
+  },
+  {
+    "id": "evercade",
+    "name": "Evercade",
+    "thegamesdb_id": 4985
+  },
+  {
+    "id": "fairchild",
+    "name": "Fairchild Channel F",
+    "thegamesdb_id": 4928,
+    "icon_tgdb": "fairchild-1445261469.png"
+  },
+  {
+    "id": "fds",
+    "name": "Famicom Disk System",
+    "thegamesdb_id": 4936,
+    "icon_tgdb": "fds-1445251188.png"
+  },
+  {
+    "id": "fmtowns",
+    "name": "FM Towns Marty",
+    "thegamesdb_id": 4932,
+    "icon_tgdb": "fmtowns-1444085037.png"
+  },
+  {
+    "id": "fujitsu-fm-7",
+    "name": "Fujitsu FM-7",
+    "thegamesdb_id": 4978
+  },
+  {
+    "id": "gp32",
+    "name": "GP32",
+    "thegamesdb_id": 5015
+  },
+  {
+    "id": "gakken-compact-vision",
+    "name": "Gakken Compact Vision",
+    "thegamesdb_id": 4962
+  },
+  {
+    "id": "game-and-watch",
+    "name": "Game & Watch",
+    "thegamesdb_id": 4950,
+    "icon_tgdb": "game-and-watch-1448906321.png"
+  },
+  {
+    "id": "game-com",
+    "name": "Game.com",
+    "thegamesdb_id": 4940,
+    "icon_tgdb": "game-com-1445286056.png"
+  },
+  {
+    "id": "game-wave",
+    "name": "Game Wave",
+    "thegamesdb_id": 5002
+  },
+  {
+    "id": "gamate",
+    "name": "Gamate",
+    "thegamesdb_id": 5004
+  },
+  {
+    "id": "gizmondo",
+    "name": "Gizmondo",
+    "thegamesdb_id": 4992
+  },
+  {
+    "id": "lcd",
+    "name": "Handheld Electronic Games (LCD)",
+    "thegamesdb_id": 4951,
+    "icon_tgdb": "lcd-1448986915.png"
+  },
+  {
+    "id": "hyperscan",
+    "name": "HyperScan",
+    "thegamesdb_id": 4987
+  },
+  {
+    "id": "intellivision",
+    "name": "Intellivision",
+    "thegamesdb_id": 32,
+    "icon_tgdb": "intellivision-1336524468.png"
+  },
+  {
+    "id": "interton-vc-4000",
+    "name": "Interton VC 4000",
+    "thegamesdb_id": 4994
+  },
+  {
+    "id": "ios",
+    "name": "iOS",
+    "thegamesdb_id": 4915,
+    "icon_tgdb": "4915-1393096970.png"
+  },
+  {
+    "id": "j2me-java-platform-micro-edition",
+    "name": "J2ME (Java Platform, Micro Edition)",
+    "thegamesdb_id": 5018
+  },
+  {
+    "id": "jupiter-ace",
+    "name": "Jupiter Ace",
+    "thegamesdb_id": 5019
+  },
+  {
+    "id": "mac-os",
+    "name": "Mac OS",
+    "thegamesdb_id": 37,
+    "icon_tgdb": "mac-os-1340244009.png"
+  },
+  {
+    "id": "magnavox-odyssey",
+    "name": "Magnavox Odyssey 1",
+    "thegamesdb_id": 4961
+  },
+  {
+    "id": "magnavox-odyssey-2",
+    "name": "Magnavox Odyssey 2",
+    "thegamesdb_id": 4927,
+    "icon_tgdb": "magnavox-odyssey-2-1447143561.png"
+  },
+  {
+    "id": "mattel-aquarius",
+    "name": "Mattel Aquarius",
+    "thegamesdb_id": 4989
+  },
+  {
+    "id": "megaduck",
+    "name": "Mega Duck",
+    "thegamesdb_id": 4948,
+    "icon_tgdb": "megaduck-1447489202.png"
+  },
+  {
+    "id": "microsoft-xbox",
+    "name": "Microsoft Xbox",
+    "thegamesdb_id": 14,
+    "icon_tgdb": "microsoft-xbox-1336524486.png"
+  },
+  {
+    "id": "microsoft-xbox-360",
+    "name": "Microsoft Xbox 360",
+    "thegamesdb_id": 15,
+    "icon_tgdb": "microsoft-xbox-360-1336524497.png"
+  },
+  {
+    "id": "microsoft-xbox-one",
+    "name": "Microsoft Xbox One",
+    "thegamesdb_id": 4920,
+    "icon_tgdb": "microsoft-xbox-one-1393097041.png"
+  },
+  {
+    "id": "microsoft-xbox-series-x",
+    "name": "Microsoft Xbox Series X",
+    "thegamesdb_id": 4981,
+    "icon_tgdb": "microsoft-xbox-one-1393097041.png"
+  },
+  {
+    "id": "milton-bradley-microvision",
+    "name": "Milton Bradley Microvision",
+    "thegamesdb_id": 4972
+  },
+  {
+    "id": "msx",
+    "name": "MSX",
+    "thegamesdb_id": 4929,
+    "icon_tgdb": "msx-1444085603.png"
+  },
+  {
+    "id": "ngage",
+    "name": "N-Gage",
+    "thegamesdb_id": 4938,
+    "icon_tgdb": "4938-1445259918.png"
+  },
+  {
+    "id": "neogeo",
+    "name": "Neo Geo",
+    "thegamesdb_id": 24,
+    "icon_tgdb": "neogeo-1336524621.png"
+  },
+  {
+    "id": "neo-geo-cd",
+    "name": "Neo Geo CD",
+    "thegamesdb_id": 4956,
+    "icon_tgdb": "neo-geo-cd-1468269031.png"
+  },
+  {
+    "id": "neo-geo-pocket",
+    "name": "Neo Geo Pocket",
+    "thegamesdb_id": 4922,
+    "icon_tgdb": "neo-geo-pocket-1393097137.png"
+  },
+  {
+    "id": "neo-geo-pocket-color",
+    "name": "Neo Geo Pocket Color",
+    "thegamesdb_id": 4923,
+    "icon_tgdb": "neo-geo-pocket-color-1393097242.png"
+  },
+  {
+    "id": "nintendo-3ds",
+    "name": "Nintendo 3DS",
+    "thegamesdb_id": 4912,
+    "icon_tgdb": "nintendo-3ds-1344286647.png"
+  },
+  {
+    "id": "nintendo-64",
+    "name": "Nintendo 64",
+    "thegamesdb_id": 3,
+    "icon_tgdb": "nintendo-64-1336524631.png"
+  },
+  {
+    "id": "nintendo-ds",
+    "name": "Nintendo DS",
+    "thegamesdb_id": 8,
+    "icon_tgdb": "nintendo-ds-1336524642.png"
+  },
+  {
+    "id": "nintendo-entertainment-system-nes",
+    "name": "Nintendo Entertainment System (NES)",
+    "thegamesdb_id": 7,
+    "icon_tgdb": "nintendo-entertainment-system-nes-1336524652.png"
+  },
+  {
+    "id": "nintendo-gameboy",
+    "name": "Nintendo Game Boy",
+    "thegamesdb_id": 4,
+    "icon_tgdb": "nintendo-gameboy-1336524703.png"
+  },
+  {
+    "id": "nintendo-gameboy-advance",
+    "name": "Nintendo Game Boy Advance",
+    "thegamesdb_id": 5,
+    "icon_tgdb": "nintendo-gameboy-advance-1336524672.png"
+  },
+  {
+    "id": "nintendo-gameboy-color",
+    "name": "Nintendo Game Boy Color",
+    "thegamesdb_id": 41,
+    "icon_tgdb": "nintendo-gameboy-color-1336524685.png"
+  },
+  {
+    "id": "nintendo-gamecube",
+    "name": "Nintendo GameCube",
+    "thegamesdb_id": 2,
+    "icon_tgdb": "nintendo-gamecube-1336524714.png"
+  },
+  {
+    "id": "nintendo-pokmon-mini",
+    "name": "Nintendo Pokémon Mini",
+    "thegamesdb_id": 4957,
+    "icon_tgdb": "4957-1468268912.png"
+  },
+  {
+    "id": "nintendo-switch",
+    "name": "Nintendo Switch",
+    "thegamesdb_id": 4971,
+    "icon_tgdb": "nintendo-switch-1489508941.png"
+  },
+  {
+    "id": "nintendo-switch-2",
+    "name": "Nintendo Switch 2",
+    "thegamesdb_id": 5021
+  },
+  {
+    "id": "nintendo-virtual-boy",
+    "name": "Nintendo Virtual Boy",
+    "thegamesdb_id": 4918,
+    "icon_tgdb": "nintendo-virtual-boy-1447139594.png"
+  },
+  {
+    "id": "nintendo-wii",
+    "name": "Nintendo Wii",
+    "thegamesdb_id": 9,
+    "icon_tgdb": "nintendo-wii-1336524734.png"
+  },
+  {
+    "id": "nintendo-wii-u",
+    "name": "Nintendo Wii U",
+    "thegamesdb_id": 38,
+    "icon_tgdb": "nintendo-wii-u-1336524744.png"
+  },
+  {
+    "id": "nuon",
+    "name": "Nuon",
+    "thegamesdb_id": 4935,
+    "icon_tgdb": "nuon-1445250489.png"
+  },
+  {
+    "id": "oculus-quest",
+    "name": "Oculus Quest",
+    "thegamesdb_id": 4990
+  },
+  {
+    "id": "oric-1",
+    "name": "Oric-1",
+    "thegamesdb_id": 4986
+  },
+  {
+    "id": "ouya",
+    "name": "Ouya",
+    "thegamesdb_id": 4921,
+    "icon_tgdb": "ouya-1393097891.png"
+  },
+  {
+    "id": "pc",
+    "name": "PC",
+    "thegamesdb_id": 1,
+    "icon_tgdb": "pc-1336524756.png"
+  },
+  {
+    "id": "pc-88",
+    "name": "PC-88",
+    "thegamesdb_id": 4933,
+    "icon_tgdb": "pc88-1444092490.png"
+  },
+  {
+    "id": "pc-98",
+    "name": "PC-98",
+    "thegamesdb_id": 4934,
+    "icon_tgdb": "4934-1444591291.png"
+  },
+  {
+    "id": "pcfx",
+    "name": "PC-FX",
+    "thegamesdb_id": 4930,
+    "icon_tgdb": "pcfx-1444080539.png"
+  },
+  {
+    "id": "palmtex-super-micro",
+    "name": "Palmtex Super Micro",
+    "thegamesdb_id": 5003
+  },
+  {
+    "id": "philips-cd-i",
+    "name": "Philips CD-i",
+    "thegamesdb_id": 4917,
+    "icon_tgdb": "philips-cd-i-1393098199.png"
+  },
+  {
+    "id": "philips-tele-spiel-es-2201",
+    "name": "Philips Tele-Spiel ES-2201",
+    "thegamesdb_id": 4993
+  },
+  {
+    "id": "pioneer-laseractive",
+    "name": "Pioneer LaserActive",
+    "thegamesdb_id": 4975
+  },
+  {
+    "id": "playdate",
+    "name": "Playdate",
+    "thegamesdb_id": 5016
+  },
+  {
+    "id": "playdia",
+    "name": "Playdia",
+    "thegamesdb_id": 5000
+  },
+  {
+    "id": "r-zone",
+    "name": "R-Zone",
+    "thegamesdb_id": 4983,
+    "icon_tgdb": "r_zone.png"
+  },
+  {
+    "id": "rca-studio-ii",
+    "name": "RCA Studio II",
+    "thegamesdb_id": 4967
+  },
+  {
+    "id": "sg1000",
+    "name": "SEGA SG-1000",
+    "thegamesdb_id": 4949,
+    "icon_tgdb": "sg1000-1448530019.png"
+  },
+  {
+    "id": "shg-black-point",
+    "name": "SHG Black Point",
+    "thegamesdb_id": 4996
+  },
+  {
+    "id": "sam-coupe",
+    "name": "SAM Coupé",
+    "thegamesdb_id": 4979
+  },
+  {
+    "id": "sega-32x",
+    "name": "Sega 32X",
+    "thegamesdb_id": 33,
+    "icon_tgdb": "sega-32x-1336524764.png"
+  },
+  {
+    "id": "sega-cd",
+    "name": "Sega CD",
+    "thegamesdb_id": 21,
+    "icon_tgdb": "sega-cd-1336524786.png"
+  },
+  {
+    "id": "sega-dreamcast",
+    "name": "Sega Dreamcast",
+    "thegamesdb_id": 16,
+    "icon_tgdb": "sega-dreamcast-1336524794.png"
+  },
+  {
+    "id": "sega-game-gear",
+    "name": "Sega Game Gear",
+    "thegamesdb_id": 20,
+    "icon_tgdb": "sega-game-gear-1336524808.png"
+  },
+  {
+    "id": "sega-genesis",
+    "name": "Sega Genesis",
+    "thegamesdb_id": 18,
+    "icon_tgdb": "sega-genesis-1336524897.png"
+  },
+  {
+    "id": "sega-master-system",
+    "name": "Sega Master System",
+    "thegamesdb_id": 35,
+    "icon_tgdb": "sega-master-system-1336524915.png"
+  },
+  {
+    "id": "sega-mega-drive",
+    "name": "Sega Mega Drive",
+    "thegamesdb_id": 36,
+    "icon_tgdb": "sega-mega-drive-1336524932.png"
+  },
+  {
+    "id": "sega-pico",
+    "name": "Sega Pico",
+    "thegamesdb_id": 4958,
+    "icon_tgdb": "4958-1468268712.png"
+  },
+  {
+    "id": "sega-saturn",
+    "name": "Sega Saturn",
+    "thegamesdb_id": 17,
+    "icon_tgdb": "sega-saturn-1336524946.png"
+  },
+  {
+    "id": "sharp-x1",
+    "name": "Sharp X1",
+    "thegamesdb_id": 4977
+  },
+  {
+    "id": "x68",
+    "name": "Sharp X68000",
+    "thegamesdb_id": 4931,
+    "icon_tgdb": "x68000-1444590873.png"
+  },
+  {
+    "id": "sinclair-ql",
+    "name": "Sinclair QL",
+    "thegamesdb_id": 5020
+  },
+  {
+    "id": "sinclair-zx-spectrum",
+    "name": "Sinclair ZX Spectrum",
+    "thegamesdb_id": 4913,
+    "icon_tgdb": "sinclair-zx-spectrum-1393098451.png"
+  },
+  {
+    "id": "sinclair-zx80",
+    "name": "Sinclair ZX80",
+    "thegamesdb_id": 5009
+  },
+  {
+    "id": "sinclair-zx81",
+    "name": "Sinclair ZX81",
+    "thegamesdb_id": 5010
+  },
+  {
+    "id": "sony-playstation",
+    "name": "Sony Playstation",
+    "thegamesdb_id": 10,
+    "icon_tgdb": "sony-playstation-1336524956.png"
+  },
+  {
+    "id": "sony-playstation-2",
+    "name": "Sony Playstation 2",
+    "thegamesdb_id": 11,
+    "icon_tgdb": "sony-playstation-2-1336524968.png"
+  },
+  {
+    "id": "sony-playstation-3",
+    "name": "Sony Playstation 3",
+    "thegamesdb_id": 12,
+    "icon_tgdb": "sony-playstation-3-1336524977.png"
+  },
+  {
+    "id": "sony-playstation-4",
+    "name": "Sony Playstation 4",
+    "thegamesdb_id": 4919,
+    "icon_tgdb": "sony-playstation-4-1393097424.png"
+  },
+  {
+    "id": "sony-playstation-5",
+    "name": "Sony Playstation 5",
+    "thegamesdb_id": 4980,
+    "icon_tgdb": "sony-playstation-4-1393097424.png"
+  },
+  {
+    "id": "sony-psp",
+    "name": "Sony Playstation Portable",
+    "thegamesdb_id": 13,
+    "icon_tgdb": "sony-psp-1336525006.png"
+  },
+  {
+    "id": "sony-playstation-vita",
+    "name": "Sony Playstation Vita",
+    "thegamesdb_id": 39,
+    "icon_tgdb": "sony-playstation-vita-1336524991.png"
+  },
+  {
+    "id": "stadia",
+    "name": "Stadia",
+    "thegamesdb_id": 5011
+  },
+  {
+    "id": "super-nintendo-snes",
+    "name": "Super Nintendo (SNES)",
+    "thegamesdb_id": 6,
+    "icon_tgdb": "super-nintendo-snes-1448530937.png"
+  },
+  {
+    "id": "tandy-vis",
+    "name": "Tandy Visual Interactive System",
+    "thegamesdb_id": 4982,
+    "icon_tgdb": "vis_console_icon.png"
+  },
+  {
+    "id": "tapwave-zodiac",
+    "name": "Tapwave Zodiac",
+    "thegamesdb_id": 5017
+  },
+  {
+    "id": "texas-instruments-ti-99-4a",
+    "name": "Texas Instruments TI-99/4A",
+    "thegamesdb_id": 4953,
+    "icon_tgdb": "texas-instruments-ti-99-4a-1468138361.png"
+  },
+  {
+    "id": "tomy-pyta",
+    "name": "Tomy Tutor",
+    "thegamesdb_id": 4960
+  },
+  {
+    "id": "trs80-color",
+    "name": "TRS-80 Color Computer",
+    "thegamesdb_id": 4941,
+    "icon_tgdb": "trs80-color-1446589658.png"
+  },
+  {
+    "id": "turbo-grafx-cd",
+    "name": "TurboGrafx CD",
+    "thegamesdb_id": 4955,
+    "icon_tgdb": "4955-1455648164.png"
+  },
+  {
+    "id": "turbografx-16",
+    "name": "TurboGrafx 16",
+    "thegamesdb_id": 34,
+    "icon_tgdb": "turbografx-16-1336525037.png"
+  },
+  {
+    "id": "v-smile",
+    "name": "V.Smile",
+    "thegamesdb_id": 4988
+  },
+  {
+    "id": "vectrex",
+    "name": "Vectrex",
+    "thegamesdb_id": 4939,
+    "icon_tgdb": "vectrex-1445285621.png"
+  },
+  {
+    "id": "vtech-creativision",
+    "name": "VTech CreatiVision",
+    "thegamesdb_id": 5005
+  },
+  {
+    "id": "vtech-socrates",
+    "name": "VTech Socrates",
+    "thegamesdb_id": 4998
+  },
+  {
+    "id": "watara-supervision",
+    "name": "Watara Supervision",
+    "thegamesdb_id": 4959
+  },
+  {
+    "id": "wonderswan",
+    "name": "WonderSwan",
+    "thegamesdb_id": 4925,
+    "icon_tgdb": "wonderswan-1393097485.png"
+  },
+  {
+    "id": "wonderswan-color",
+    "name": "WonderSwan Color",
+    "thegamesdb_id": 4926,
+    "icon_tgdb": "wonderswan-color-1393097500.png"
+  },
+  {
+    "id": "xavix-port",
+    "name": "Xavix Port",
+    "thegamesdb_id": 4984,
+    "icon_tgdb": "xavix_port.png"
+  }
+]

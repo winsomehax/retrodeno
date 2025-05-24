@@ -1,0 +1,38 @@
+{
+  "vice": {
+    "name": "VICE",
+    "platforms": ["c64"],
+    "version": "3.5",
+    "description": "Versatile Commodore Emulator"
+  },
+  "fs-uae": {
+    "name": "FS-UAE",
+    "platforms": ["amiga"],
+    "version": "3.1.66",
+    "description": "Amiga emulator with modern features"
+  },
+  "hatari": {
+    "name": "Hatari",
+    "platforms": ["atarist"],
+    "version": "2.4.1",
+    "description": "Atari ST/STE/TT/Falcon emulator"
+  },
+  "fuse": {
+    "name": "Fuse",
+    "platforms": ["spectrum"],
+    "version": "1.6.0",
+    "description": "ZX Spectrum emulator"
+  },
+  "fceux": {
+    "name": "FCEUX",
+    "platforms": ["nes"],
+    "version": "2.6.4",
+    "description": "Nintendo Entertainment System emulator"
+  },
+  "retroarch": {
+    "name": "RetroArch",
+    "platforms": ["nes", "snes", "megadrive", "gba"],
+    "version": "1.16.0",
+    "description": "Multi-system emulator frontend"
+  }
+}

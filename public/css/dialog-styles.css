@@ -1,0 +1,65 @@
+/*
+  Styles to fix double scrollbar issue in Material Design-style dialogs.
+  Adjust selectors (e.g., .edit-dialog-container) to match your actual HTML structure.
+*/
+
+.edit-dialog-container { /* Your main dialog wrapper */
+  display: flex;
+  flex-direction: column;
+  /* Set a max-height for the dialog, e.g., 80% of viewport height */
+  max-height: 85vh; /* Adjust as needed */
+  /* Prevent the dialog container itself from scrolling */
+  overflow: hidden;
+
+  /* Typical Material Design styling */
+  background-color: #fff; /* Or your dialog background color */
+  border-radius: 4px;
+  box-shadow: 0 11px 15px -7px rgba(0,0,0,0.2),
+              0 24px 38px 3px rgba(0,0,0,0.14),
+              0 9px 46px 8px rgba(0,0,0,0.12);
+  width: 90%; /* Or a specific width like 600px */
+  max-width: 700px; /* Adjust as needed */
+}
+
+.edit-dialog-header { /* Your dialog's header section */
+  flex-shrink: 0; /* Prevents the header from shrinking */
+  padding: 20px 24px;
+  /* Add a border or other styling if it's part of your design */
+  /* e.g., border-bottom: 1px solid #e0e0e0; */
+}
+
+.edit-dialog-content { /* The main content area of your dialog */
+  /* This is the key: allow this area to grow and scroll */
+  flex-grow: 1;
+  overflow-y: auto;   /* Enable vertical scrolling ONLY for this area */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  padding: 0 24px 20px 24px; /* Adjust padding as needed, top padding might be handled by header */
+
+  /*
+    IMPORTANT: Any direct children of this content area,
+    especially the container where IGDB/TheGamesDB data is injected,
+    should NOT have their own `overflow-y: scroll/auto` or a fixed `height`
+    that would cause them to scroll independently.
+  */
+}
+
+/*
+  Example: If you have a specific container for the external data:
+  #external-data-container-in-dialog {
+    Ensure this element does not have `height` or `max-height` that
+    restricts it from growing with its content, and no `overflow-y: scroll/auto`.
+    It should expand naturally, letting `.edit-dialog-content` handle the scroll.
+  }
+
+  Similarly, ensure your form elements or other wrappers inside `.edit-dialog-content`
+  are not causing their own overflow.
+*/
+
+.edit-dialog-actions { /* Your dialog's footer/actions section */
+  flex-shrink: 0; /* Prevents the actions area from shrinking */
+  padding: 8px 24px 20px 24px; /* Adjust padding */
+  display: flex;
+  justify-content: flex-end; /* Or your desired alignment */
+  gap: 8px;
+  /* e.g., border-top: 1px solid #e0e0e0; */
+}

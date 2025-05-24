@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retronode - Games</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <style>
+        body { background: #f5f5f5; color: #222; font-family: 'Roboto', Arial, sans-serif; margin: 0; padding: 0; min-height: 100vh; }
+        .main-title { margin-top: 48px; font-weight: 500; letter-spacing: 1px; }
+        .section-title { margin-top: 24px; font-weight: 400; }
+        .fab-main { position: fixed; bottom: 36px; right: 36px; z-index: 1001; }
+        .fab-secondary { position: fixed; bottom: 100px; right: 36px; z-index: 1001; } /* Adjusted bottom for spacing */
+        .hidden { display: none; }
+        #backBtn { position: fixed; top: 24px; left: 24px; z-index: 1000; display: none; }
+        .cover-thumb { 
+            width: 48px; 
+            height: 48px; 
+            object-fit: cover; 
+            border-radius: 6px; 
+            background: #eee;
+            transition: filter 0.3s ease-out;
+        }
+        .cover-thumb.loading {
+            filter: blur(5px);
+        }
+        .cover-thumb.loaded {
+            filter: none;
+        }
+        .modal { max-width: 480px; }
+        .modal .modal-content {
+            max-height: 70vh; /* Adjust as needed, e.g., 65vh or 75vh */
+            overflow-y: auto;
+        }
+        /* Loading indicator styles */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .loading-overlay.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+        /* Error message styles */
+        .error-message {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #f44336;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 2001;
+            display: none;
+        }
+        .error-message.visible {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translate(-50%, 100%); }
+            to { transform: translate(-50%, 0); }
+        }
+    </style>
+    <!-- Import our modules -->
+    <script type="module" src="/js/imageLoader.js"></script>
+    <script type="module" src="/js/state.js"></script>
+</head>
+<body>
+    <!-- Sidenav and TopNav removed -->
+    <div class="container" style="margin-top:48px;max-width:1100px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <h4 class="main-title blue-text text-darken-2" style="margin: 0;">Games</h4>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;">
+            <div class="input-field" style="margin:0;flex:1;">
+                <input id="searchInput" type="text" class="validate" placeholder="Search games...">
+                <label for="searchInput" class="active" style="left:0;">Search</label>
+            </div>
+            <div class="input-field" style="margin:0;width:220px;">
+                <select id="platformFilter">
+                    <option value="">All Platforms</option>
+                </select>
+                <label for="platformFilter" class="active">Filter by Platform</label>
+            </div>
+        </div>
+        <table class="highlight responsive-table">
+            <thead>
+                <tr>
+                    <th>Cover</th>
+                    <th id="sortTitle" style="cursor:pointer;">Title <i class="material-icons" id="sortTitleIcon" style="font-size:1rem;vertical-align:middle;">unfold_more</i></th>
+                    <th>Description</th>
+                    <th id="sortPlatform" style="cursor:pointer;">Platforms <i class="material-icons" id="sortPlatformIcon" style="font-size:1rem;vertical-align:middle;">unfold_more</i></th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="gamesTableBody"></tbody>
+        </table>
+    </div>
+    <div id="crudDialog" class="modal">
+        <div class="modal-content">
+            <h5 id="crudDialogTitle"></h5>
+            <form id="crudForm"></form>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close btn-flat">Cancel</a>
+            <a href="#!" id="crudFormSubmit" class="btn blue">Save</a>
+        </div>
+    </div>
+    <button id="backBtn" class="btn-floating btn-large waves-effect waves-light blue">
+        <i class="material-icons">arrow_back</i>
+    </button>
+    <!-- FAB for navigating to Emulators page -->
+    <a id="goToEmulatorsBtn" class="btn-floating btn-large waves-effect waves-light green fab-secondary" href="emulators.html" title="Manage Emulators">
+        <i class="material-icons">memory</i>
+    </a>
+    <!-- Add FAB for adding new games -->
+    <a id="addGameBtn" class="btn-floating btn-large waves-effect waves-light blue fab-main" title="Add Game">
+        <i class="material-icons">add</i>
+    </a>
+    <!-- IGDB Results Modal -->
+    <div id="igdbResultsModal" class="modal">
+        <div class="modal-content">
+            <h5>Select Game Data from IGDB</h5>
+            <div id="igdbResultsContainer"></div>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close btn-flat">Cancel</a>
+            <a href="#!" id="igdbImportBtn" class="btn blue disabled">Import Selected</a>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script type="module">
+         // Import RetroNodeState if it's a named export from /js/state.js
+        import retroNodeState from '/js/state.js'; // Import the default exported instance
+
+        // Safe string compare function that handles undefined/null values
+        // Helper function to show toast and log to console
+        function showToastAndLog(message, level = 'info', duration = 4000) {
+            const logMessage = `Toast [${level.toUpperCase()}]: ${message}`;
+            M.toast({html: message, displayLength: duration});
+        }
+
+        function safeCompare(a, b) {
+            // Handle null, undefined, or empty values
+            if (!a && !b) return 0;
+            if (!a) return -1;
+            if (!b) return 1;
+            
+            // Convert to strings, trimming whitespace
+            const strA = String(a).trim();
+            const strB = String(b).trim();
+            
+            // Case-insensitive comparison
+            return strA.toLowerCase().localeCompare(strB.toLowerCase());
+        }
+
+        // Get platform names for a game
+        function getPlatformNames(game) {
+            if (!game?.platforms || typeof game.platforms !== 'object') return '';
+            const platformIds = Object.keys(game.platforms); // e.g., ["c64", "amiga"]
+
+            // Ensure retroNodeState.state.platforms is an array
+            if (!Array.isArray(retroNodeState.state.platforms)) {
+                return platformIds.join(', '); // Fallback to showing IDs
+            }
+
+            return platformIds
+                .map(pid => {
+                    // Find the platform object in the global state by its ID
+                    const platformObject = retroNodeState.state.platforms.find(p => p.id === pid);
+                    return platformObject?.name || pid; // Use platform name if found, otherwise fallback to pid
+                })
+                .filter(name => name && name.trim())
+                .sort()
+                .join(', ');
+        }
+
+        async function renderGamesTable() {
+            const tableBody = document.getElementById('gamesTableBody');
+            if (!tableBody) return;
+
+            // Clear existing content
+            tableBody.innerHTML = '';
+
+            const currentGlobalState = retroNodeState.state; // Use a consistent variable name
+
+            // Filter games
+            let filtered = currentGlobalState.games.filter(game => {
+                if (!game || typeof game !== 'object') return false;
+                
+                const title = (game.title || '').toLowerCase();
+                const description = (game.description || '').toLowerCase();
+                const searchStr = (currentGlobalState.searchTerm || '').toLowerCase();
+                
+                const matchesSearch = !searchStr || 
+                    title.includes(searchStr) || 
+                    description.includes(searchStr);
+                
+                const matchesPlatform = !currentGlobalState.platformFilter || 
+                    (game.platforms && currentGlobalState.platformFilter in game.platforms);
+                
+                return matchesSearch && matchesPlatform;
+            });
+
+            // Sort games
+            filtered.sort((a, b) => {
+                if (!a || !b) return 0;
+                const sortMod = currentGlobalState.sortAsc ? 1 : -1;
+                
+                try {
+                    switch (currentGlobalState.sortField) {
+                        case 'title':
+                            return sortMod * safeCompare(a.title, b.title);
+                        case 'platforms':
+                            return sortMod * safeCompare(getPlatformNames(a), getPlatformNames(b));
+                        default:
+                            return 0;
+                    }
+                } catch (err) {
+                    console.error('Error during sort:', err); // Removed general log
+                    return 0;
+                }
+            });
+
+            // Calculate pagination
+            // totalItems should be updated in retroNodeState when games list changes or filters change
+            const startIndex = (currentGlobalState.currentPage - 1) * currentGlobalState.itemsPerPage;
+            const endIndex = startIndex + currentGlobalState.itemsPerPage;
+            const paginatedGames = filtered.slice(startIndex, endIndex);
+
+            // Show loading state
+            if (currentGlobalState.isLoading) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="center-align">
+                            <div class="progress">
+                                <div class="indeterminate"></div>
+                            </div>
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            // Show error state if any
+            if (currentGlobalState.error) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="center-align">
+                            <div class="red-text">${currentGlobalState.error}</div>
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            // Render each game row
+            paginatedGames.forEach((game, loopIdx) => { // Renamed idx to loopIdx for clarity
+                if (!game) return;
+                const originalGameIndex = retroNodeState.state.games.indexOf(game); // Get index from master list
+                const platformNames = getPlatformNames(game);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td style="width:60px;">
+                        <img src="${game.cover_image_path || '/img/default-cover.png'}" 
+                             alt="${game.title || 'No title'}" 
+                             class="cover-thumb"
+                             onerror="if (this.src !== window.location.origin + '/img/default-cover.png') { this.src='/img/default-cover.png'; } else { this.onerror=null; /* Optionally: this.style.display='none'; */ }">
+                    </td>
+                    <td>${game.title || 'No title'}</td>
+                    <td>${game.description || 'No description'}</td>
+                    <td>${platformNames || 'No platforms'}</td>
+                    <td style="white-space:nowrap;">
+                        <button class="btn-flat blue-text edit-game-btn" data-original-index="${originalGameIndex}" title="Edit">
+                            <i class="material-icons">edit</i>
+                        </button>
+
+                        <button class="btn-flat red-text delete-game-btn" data-original-index="${originalGameIndex}" title="Delete">
+                            <i class="material-icons">delete</i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            // Update pagination controls
+            updatePagination();
+        }
+
+        function renderPlatformFilter() {
+            const select = document.getElementById('platformFilter');
+            const currentGlobalState = retroNodeState.state;
+            
+            let platformOptionsHtml = '';
+            // Ensure platforms is an array and each platform object has 'id' and 'name'
+            if (Array.isArray(currentGlobalState.platforms)) {
+                platformOptionsHtml = currentGlobalState.platforms
+                    .map(p => {
+                        // Defensive check for p.id and p.name
+                        const id = p && p.id !== undefined ? p.id : '';
+                        const name = p && p.name !== undefined ? p.name : 'Unnamed Platform';
+                        return `<option value="${id}">${name}</option>`;
+                    })
+                    .join('');
+            }
+            select.innerHTML = '<option value="">All Platforms</option>' + platformOptionsHtml;
+            
+            // Preserve current selection if possible
+            const currentFilterValue = currentGlobalState.platformFilter || "";
+            select.value = currentFilterValue;
+            M.FormSelect.init(select);
+        }
+
+        function openGameDialog(mode, game = {}, originalIndex = null) { // idx renamed to originalIndex
+            document.getElementById('crudDialogTitle').textContent = mode === 'edit' ? 'Edit Game' : 'Add Game';
+            // Platform selection: multi-select
+            let platformOptions = '';
+            if (Array.isArray(retroNodeState.state.platforms)) {
+                platformOptions = retroNodeState.state.platforms.map(p_obj => { // p_obj is like {id: "c64", name: "Commodore 64"}
+                    const platformId = p_obj.id;
+                    const platformName = p_obj.name;
+                    // Check if this platformId is in the game's platforms object
+                    const isSelected = game.platforms && game.platforms.hasOwnProperty(platformId);
+                    return `<option value="${platformId}" ${isSelected ? 'selected' : ''}>${platformName}</option>`;
+                }).join('');
+            }
+            document.getElementById('crudForm').innerHTML = `
+                <div class="input-field">
+                    <input id="gameTitle" type="text" value="${game.title || ''}" required>
+                    <label for="gameTitle" class="active">Title</label>
+                </div>
+                <div class="input-field">
+                    <input id="gameDescription" type="text" value="${game.description || ''}">
+                    <label for="gameDescription" class="active">Description</label>
+                </div>
+                <div class="input-field">
+                    <input id="gameCover" type="url" value="${game.cover_image_path || ''}">
+                    <label for="gameCover" class="active">Cover Image URL</label>
+                </div>
+                <div class="input-field">
+                    <select id="gamePlatforms" multiple>
+                        ${platformOptions}
+                    </select>
+                    <label for="gamePlatforms" class="active">Platforms</label>
+                </div>
+                <div class="input-field" style="margin-top:16px;display:flex;flex-wrap:wrap;gap:8px;">
+                    <button id="askAiBtn" type="button" class="btn orange waves-effect waves-light" style="flex:1 1 calc(50% - 4px);min-width:150px;"><i class="material-icons left">smart_toy</i>Ask AI</button>
+                    <button id="igdbDialogImportBtn" type="button" class="btn blue waves-effect waves-light" style="flex:1 1 calc(50% - 4px);min-width:150px;"><i class="material-icons left">image_search</i>IGDB</button>
+                    <button id="theGamesDBDialogImportBtn" type="button" class="btn green waves-effect waves-light" style="flex:1 1 100%;margin-top:8px;"><i class="material-icons left">storage</i>TheGamesDB</button>
+                </div>
+                <div id="igdbInlineResults" style="margin-top:8px;"></div>
+                <div id="theGamesDBInlineResults" style="margin-top:8px;"></div>
+            `;
+            M.FormSelect.init(document.getElementById('gamePlatforms'));
+            const modalElem = document.getElementById('crudDialog');
+            // Always re-init modal with onOpenEnd to ensure handler is attached after render
+            let modalInstance = M.Modal.getInstance(modalElem);
+            if (modalInstance) modalInstance.destroy();
+            modalInstance = M.Modal.init(modalElem, {
+                onOpenEnd: () => {
+                    const saveBtn = document.getElementById('crudFormSubmit');
+                    if (saveBtn) {
+                        // Remove any previous click handlers
+                        const newBtn = saveBtn.cloneNode(true);
+                        saveBtn.parentNode.replaceChild(newBtn, saveBtn);
+                        newBtn.onclick = function(e) {
+                            e.preventDefault();
+                            submitGameForm(mode, originalIndex); // Pass originalIndex
+                        };
+                    }
+                }
+            });
+            modalInstance.open();
+            // Attach Ask AI button handler
+            setTimeout(() => {
+                const askAiBtn = document.getElementById('askAiBtn');
+                if (askAiBtn) {
+                    askAiBtn.onclick = async function() {
+                        const title = document.getElementById('gameTitle').value.trim();
+                        if (!title) { M.toast({html: 'Enter a game title first!'}); return; }
+                        askAiBtn.disabled = true;
+                        askAiBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Asking...';
+                        try {
+                            const resp = await fetch('/api/ai/game-info?title=' + encodeURIComponent(title));
+                            const data = await resp.json();
+                            if (data && data.description) {
+                                document.getElementById('gameDescription').value = data.description;
+                                M.updateTextFields();
+                                M.toast({html: 'AI description filled!'});
+                            } else {
+                                M.toast({html: 'No info found from AI.'});
+                            }
+                        } catch (e) {
+                            M.toast({html: 'AI request failed.'});
+                        }
+                        askAiBtn.disabled = false;
+                        askAiBtn.innerHTML = '<i class="material-icons left">smart_toy</i>Ask AI';
+                    };
+                }
+                // IGDB Import button handler
+                const igdbDialogBtn = document.getElementById('igdbDialogImportBtn');
+                if (igdbDialogBtn) {
+                    igdbDialogBtn.onclick = async function() {
+                        const title = document.getElementById('gameTitle').value.trim();
+                        if (!title) { M.toast({html: 'Enter a game title first!'}); return; }
+                        igdbDialogBtn.disabled = true;
+                        igdbDialogBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Searching IGDB...';
+                        const resultsDiv = document.getElementById('igdbInlineResults');
+                        resultsDiv.innerHTML = '<div class="progress" style="margin-top:10px;"><div class="indeterminate"></div></div>';
+                        try {
+                            const igdbResp = await fetch('/api/igdb/game', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ title })
+                            });
+                            const igdbData = await igdbResp.json();
+
+                            resultsDiv.innerHTML = '';
+                            if (igdbData && igdbData.results && igdbData.results.length) {
+                                igdbData.results.forEach((game, idx) => {
+                                    // Collect all possible cover images (cover + screenshots)
+                                    let images = [];
+                                    if (game.cover && game.cover.url) images.push({url: 'https:' + game.cover.url, type: 'cover'});
+                                    (game.screenshots || []).forEach(s => images.push({url: 'https:' + s.url, type: 'screenshot'}));
+                                    // Build image selection UI
+                                    const imageOptions = images.map((img, i) =>
+                                        `<label style='margin-right:8px;cursor:pointer;display:inline-block;position:relative;'>
+                                            <input type='radio' name='igdbCover${idx}' value='${img.url}' ${i===0?'checked':''} style='position:absolute;left:-9999px;'>
+                                            <img src='${img.url}' data-full='${img.url.replace("t_thumb","t_1080p")}' class='igdb-cover-thumb' style='width:48px;height:48px;object-fit:cover;border-radius:4px;border:2px solid ${i===0 ? '#1976d2' : '#bbb'};margin-bottom:2px;box-shadow:0 1px 4px #0002;transition:border-color 0.2s,box-shadow 0.2s;'>
+                                            <span style='display:block;font-size:0.7em;text-align:center;color:#888;'>${img.type}</span>
+                                            <span class='igdb-cover-selected' style='display:${i===0?'block':'none'};position:absolute;top:2px;right:2px;background:#1976d2;color:#fff;border-radius:50%;width:18px;height:18px;font-size:1em;line-height:18px;text-align:center;box-shadow:0 1px 4px #0003;'>✓</span>
+                                        </label>`
+                                    ).join('');
+                                    const rating = game.rating ? `<span style='font-size:0.9em;color:#888;'>Rating: ${game.rating.toFixed(1)}</span>` : '';
+                                    const summary = game.summary ? `<div style='font-size:0.95em;margin:8px 0;'>${game.summary.substring(0, 180)}${game.summary.length > 180 ? '...' : ''}</div>` : '';
+                                    const video = (game.videos && game.videos[0]) ? `<a href='https://youtube.com/watch?v=${game.videos[0].video_id}' target='_blank'>🎬</a>` : '';
+                                    resultsDiv.innerHTML += `
+                                        <div class='card' style='display:flex;align-items:flex-start;gap:16px;margin-bottom:16px;padding:12px;box-shadow:0 2px 8px #0001;'>
+                                            <div style='flex:1;'>
+                                                <div style='display:flex;align-items:center;gap:16px;'>
+                                                    <div style='display:flex;flex-direction:column;align-items:center;'>
+                                                        <div class='igdb-image-options' data-idx='${idx}'>${imageOptions}</div>
+                                                    </div>
+                                                    <div>
+                                                        <b>${game.name}</b> ${rating} ${video}
+                                                        ${summary}
+                                                    </div>
+                                                </div>
+                                                <div style='margin-top:8px;'>
+                                                    <label><input type='checkbox' class='igdb-field' data-field='cover' checked> Cover</label>
+                                                    <label><input type='checkbox' class='igdb-field' data-field='name' checked> Title</label>
+                                                    <label><input type='checkbox' class='igdb-field' data-field='summary' checked> Summary</label>
+                                                    <label><input type='checkbox' class='igdb-field' data-field='rating' ${game.rating ? 'checked' : 'disabled'}> Rating</label>
+                                                </div>
+                                            </div>
+                                            <button class='btn blue igdb-import-btn' data-idx='${idx}' style='margin-left:16px;'>Import</button>
+                                        </div>
+                                    `;
+                                });
+                                // Attach import button handlers
+                                resultsDiv.querySelectorAll('.igdb-import-btn').forEach(btn2 => {
+                                    btn2.onclick = function() {
+                                        const idx2 = parseInt(btn2.getAttribute('data-idx'));
+                                        const game2 = igdbData.results[idx2];
+                                        const card = btn2.closest('.card');
+                                        const fields = Array.from(card.querySelectorAll('.igdb-field:checked')).map(cb=>cb.getAttribute('data-field'));
+                                        // Get selected cover image
+                                        let coverUrl = '';
+                                        const selectedImg = card.querySelector(`.igdb-image-options input[type='radio']:checked`);
+                                        if (selectedImg) coverUrl = selectedImg.value;
+                                        if (fields.includes('cover') && coverUrl) document.getElementById('gameCover').value = coverUrl;
+                                        if (fields.includes('name')) document.getElementById('gameTitle').value = game2.name;
+                                        if (fields.includes('summary')) document.getElementById('gameDescription').value = game2.summary || '';
+                                        if (fields.includes('rating') && game2.rating) document.getElementById('gameDescription').value += `\nRating: ${game2.rating.toFixed(1)}`;
+                                        M.updateTextFields();
+                                        resultsDiv.innerHTML = '';
+                                    };
+                                });
+
+                                const modalIgdbImages = resultsDiv.querySelectorAll('.igdb-image-options img');
+                                // Add mouseover for full-size preview
+                                modalIgdbImages.forEach(img => {
+                                    img.addEventListener('mouseenter', function(e) {
+                                        console.log('Mouse entered IGDB image (modal):', this.src, 'Full size:', this.getAttribute('data-full'));
+                                        let previewImg = document.getElementById('coverPreviewImg');
+                                        if (!previewImg) {
+                                            previewImg = document.createElement('img');
+                                            previewImg.id = 'coverPreviewImg';
+                                            previewImg.style.position = 'fixed';
+                                            previewImg.style.zIndex = '3000';
+                                            previewImg.style.display = 'none';
+                                            previewImg.style.maxWidth = '320px';
+                                            previewImg.style.maxHeight = '80vh';
+                                            previewImg.style.boxShadow = '0 4px 24px rgba(0,0,0,0.25)';
+                                            previewImg.style.borderRadius = '10px';
+                                            previewImg.style.background = '#fff';
+                                            previewImg.style.pointerEvents = 'none';
+                                            document.body.appendChild(previewImg);
+                                        }
+                                        previewImg.src = this.getAttribute('data-full') || this.src;
+                                        previewImg.style.display = 'block';
+                                        // Position near mouse, but keep on screen
+                                        const move = ev => {
+                                            let x = ev.clientX + 24;
+                                            let y = ev.clientY - 24;
+                                            if (x + previewImg.width > window.innerWidth - 16) x = window.innerWidth - previewImg.width - 16;
+                                            if (y + previewImg.height > window.innerHeight - 16) y = window.innerHeight - previewImg.height - 16;
+                                            if (y < 0) y = 0;
+                                            previewImg.style.left = x + 'px';
+                                            previewImg.style.top = y + 'px';
+                                        };
+                                        move(e);
+                                        window.addEventListener('mousemove', move);
+                                        this._moveHandler = move;
+                                    });
+                                    img.addEventListener('mouseleave', function() {
+                                        let previewImg = document.getElementById('coverPreviewImg');
+                                        if (previewImg) previewImg.style.display = 'none';
+                                        window.removeEventListener('mousemove', this._moveHandler);
+                                    });
+                                });
+                                setTimeout(() => {
+                                    resultsDiv.querySelectorAll('.igdb-image-options').forEach(optGroup => {
+                                        const radios = optGroup.querySelectorAll('input[type="radio"]');
+                                        radios.forEach(radio => {
+                                            radio.addEventListener('change', function() {
+                                                optGroup.querySelectorAll('img.igdb-cover-thumb').forEach(img => {
+                                                    img.style.borderColor = '#bbb';
+                                                    img.style.boxShadow = '0 1px 4px #0002';
+                                                });
+                                                optGroup.querySelectorAll('.igdb-cover-selected').forEach(sel => sel.style.display = 'none');
+                                                const selectedLabel = this.closest('label');
+                                                const img = selectedLabel.querySelector('img.igdb-cover-thumb');
+                                                const sel = selectedLabel.querySelector('.igdb-cover-selected');
+                                                if (img) {
+                                                    img.style.borderColor = '#1976d2';
+                                                    img.style.boxShadow = '0 0 0 2px #1976d2,0 1px 4px #0002';
+                                                }
+                                                if (sel) sel.style.display = 'block';
+                                            });
+                                        });
+                                    });
+                                }, 0);
+                            } else {
+                                console.log('[Modal IGDB] No IGDB results found or data format issue. Raw data:', JSON.stringify(igdbData, null, 2));
+                                resultsDiv.innerHTML = '<div class="card-panel yellow lighten-4">No IGDB results found.</div>';
+                            }
+                        } catch (e) {
+                            resultsDiv.innerHTML = '<div class="card-panel red lighten-4">Error fetching IGDB data.</div>';
+                        }
+                        igdbBtn.disabled = false;
+                        igdbDialogBtn.innerHTML = '<i class="material-icons left">image_search</i>IGDB';
+                    };
+                }
+                // Initialize TheGamesDB search functionality for the dialog
+                initializeTheGamesDBSearchInDialog();
+            }, 100);
+        }
+        function submitGameForm(mode, originalIndex) { // idx renamed to originalIndex
+            const gameTitleElement = document.getElementById('gameTitle');
+            const rawTitleValue = gameTitleElement ? gameTitleElement.value : 'ELEMENT_NOT_FOUND';
+
+            const title = rawTitleValue === 'ELEMENT_NOT_FOUND' ? '' : rawTitleValue.trim();
+
+            const descriptionElement = document.getElementById('gameDescription');
+            const description = descriptionElement ? descriptionElement.value.trim() : '';
+            const coverElement = document.getElementById('gameCover');
+            const cover = coverElement ? coverElement.value.trim() : '';
+            
+            const platformSelect = document.getElementById('gamePlatforms'); // Keep this line
+            const selectedPlatforms = platformSelect ? Array.from(platformSelect.selectedOptions).map(opt => opt.value) : [];
+
+            if (!title) { 
+                M.toast({html: 'Title is required'}); 
+                console.log('[submitGameForm] Title was empty. Submission aborted.');return; }
+            const gameData = {
+                title,
+                description,
+                cover_image_path: cover,
+                platforms: {}
+            };
+            selectedPlatforms.forEach(pid => { gameData.platforms[pid] = '' }); // ROM path left blank for now
+            
+            if (mode === 'add') {
+                fetch('/api/games', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(gameData)
+                }).then(r => r.json()).then(resp => {
+                    if (resp.success && resp.data) {
+                        // Ensure the new game object uses its primary key as 'id'
+                        const newGameWithProperId = {
+                            ...resp.data,
+                            id: resp.data._id || resp.data.id // Prioritize _id
+                        };
+                        const newGamesList = [...retroNodeState.state.games, newGameWithProperId];
+                        retroNodeState.setState({ 
+                            games: newGamesList,
+                            totalItems: newGamesList.length // Update totalItems
+                        });
+                        M.Modal.getInstance(document.getElementById('crudDialog')).close();
+                        M.toast({html: 'Game added!'});
+                    } else {
+                        M.toast({html: resp.message || 'Failed to add game'});
+                    }
+                }).catch(err => {
+                    M.toast({html: 'Error adding game.'});
+                });
+            } else if (mode === 'edit') { // originalIndex is the index in retroNodeState.state.games
+                if (originalIndex === null || originalIndex < 0 || originalIndex >= retroNodeState.state.games.length) {
+                    M.toast({html: 'Error: Invalid game reference for update.'});
+                    return;
+                }
+                const gameToUpdate = retroNodeState.state.games[originalIndex];
+                let endpointIdentifier;
+
+                if (gameToUpdate && gameToUpdate.id) {
+                    endpointIdentifier = gameToUpdate.id;
+                } else if (gameToUpdate && gameToUpdate.title_key) {
+                    endpointIdentifier = encodeURIComponent(gameToUpdate.title_key);
+                } else if (gameToUpdate && gameToUpdate.title) {
+                    endpointIdentifier = encodeURIComponent(gameToUpdate.title);
+                } else {
+                    M.toast({html: 'Error: Cannot identify game to update. Game data might be incomplete.'});
+                    return;
+                }
+                
+                fetch(`/api/games/${endpointIdentifier}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(gameData)
+                })
+                .then(async response => {
+                    if (response.ok) {
+                        const resp = await response.json();
+                        if (resp.success && resp.data) {
+                            const updatedGameWithProperId = {
+                                ...resp.data,
+                                id: resp.data._id || resp.data.id
+                            };
+                            const updatedGamesList = [...retroNodeState.state.games];
+                            updatedGamesList[originalIndex] = updatedGameWithProperId;
+                            retroNodeState.setState({ games: updatedGamesList });
+                            M.Modal.getInstance(document.getElementById('crudDialog')).close();
+                            showToastAndLog('Game updated!');
+                        } else {
+                            // Backend responded with success:false or missing data
+                            // console.error("[submitGameForm] Backend reported failure (JSON response):", resp); // Removed general log
+                            showToastAndLog(resp.message || 'Failed to update game (JSON error)', 'error');
+                        }
+                    } else {
+                        // Handle HTTP errors (like 404, 500) that are not JSON `success:false`
+                        const errorText = await response.text(); // Get raw error text
+                        // Try to parse as JSON for a message, otherwise use the raw text
+                        try { const errJson = JSON.parse(errorText); showToastAndLog(errJson.message || errorText, 'error'); }
+                        catch (e) { showToastAndLog(errorText || `HTTP error ${response.status}`, 'error'); }
+                    }
+                }).catch(err => {
+                    showToastAndLog('Error updating game (Network or other failure).', 'error');
+                });
+            }
+        }
+        
+        function deleteGame(originalIndex) { // idx renamed to originalIndex
+            if (originalIndex === null || originalIndex < 0 || originalIndex >= retroNodeState.state.games.length) {
+                M.toast({html: 'Error: Invalid game reference for delete.'});
+                return;
+            }
+            const gameToDelete = retroNodeState.state.games[originalIndex];
+            const endpointIdentifier = gameToDelete.id || encodeURIComponent(gameToDelete.title_key || gameToDelete.title);
+
+            fetch(`/api/games/${endpointIdentifier}`, {
+                method: 'DELETE'
+            }).then(r => r.json()).then(resp => {
+                if (resp.success) {
+                    const newGamesList = retroNodeState.state.games.filter((_, i) => i !== originalIndex);
+                    retroNodeState.setState({ 
+                        games: newGamesList,
+                        totalItems: newGamesList.length // Update totalItems
+                    });
+                    M.toast({html: 'Game deleted!'});
+                } else {
+                    M.toast({html: resp.message || 'Failed to delete game'});
+                }
+            }).catch(err => {
+                M.toast({html: 'Error deleting game.'});
+            });
+        }
+
+        async function showIgdbResults(results) {
+            // This function seems to be for a separate IGDB modal, not the inline one.
+            // Ensure it correctly interacts with the main form if it's intended to populate it.
+            const modal = document.getElementById('igdbResultsModal');
+            const container = document.getElementById('igdbResultsContainer');
+            container.innerHTML = '';
+            results.forEach((game, idx) => {
+                const coverUrl = game.cover && game.cover.url ? 'https:' + game.cover.url : '';
+                const rating = game.rating ? `<span style='font-size:0.9em;color:#888;'>Rating: ${game.rating.toFixed(1)}</span>` : '';
+                const summary = game.summary ? `<div style='font-size:0.95em;margin:8px 0;'>${game.summary.substring(0, 180)}${game.summary.length > 180 ? '...' : ''}</div>` : '';
+                const screenshots = (game.screenshots||[]).slice(0,3).map(s=>`<img src='https:${s.url}' style='width:48px;height:48px;object-fit:cover;margin-right:4px;border-radius:4px;'>`).join('');
+                const video = (game.videos && game.videos[0]) ? `<a href='https://youtube.com/watch?v=${game.videos[0].video_id}' target='_blank'>🎬</a>` : '';
+                container.innerHTML += `
+                    <div class='card' style='display:flex;align-items:flex-start;gap:16px;margin-bottom:16px;padding:12px;box-shadow:0 2px 8px #0001;'>
+                        <input type='radio' name='igdbSelect' value='${idx}' id='igdbRadio${idx}' style='margin-top:8px;'>
+                        <label for='igdbRadio${idx}' style='flex:1;cursor:pointer;'>
+                            <div style='display:flex;align-items:center;gap:16px;'>
+                                <img src='${coverUrl}' style='width:64px;height:64px;object-fit:cover;border-radius:6px;background:#eee;'>
+                                <div>
+                                    <b>${game.name}</b> ${rating} ${video}
+                                    ${summary}
+                                    <div>${screenshots}</div>
+                                </div>
+                            </div>
+                            <div style='margin-top:8px;'>
+                                <label><input type='checkbox' class='igdb-field' data-field='cover' checked> Cover</label>
+                                <label><input type='checkbox' class='igdb-field' data-field='name' checked> Title</label>
+                                <label><input type='checkbox' class='igdb-field' data-field='summary' checked> Summary</label>
+                                <label><input type='checkbox' class='igdb-field' data-field='rating' ${game.rating ? 'checked' : 'disabled'}> Rating</label>
+                            </div>
+                        </label>
+                    </div>
+                `;
+            });
+            M.Modal.getInstance(modal)?.destroy();
+            M.Modal.init(modal);
+            modal.querySelectorAll('input[name="igdbSelect"]').forEach(radio => {
+                radio.onchange = () => {
+                    document.getElementById('igdbImportBtn').classList.remove('disabled');
+                };
+            });
+            document.getElementById('igdbImportBtn').onclick = function() {
+                const selected = container.querySelector('input[name="igdbSelect"]:checked');
+                if (!selected) return;
+                const idx = parseInt(selected.value);
+                const game = results[idx];
+                const fields = Array.from(container.querySelectorAll('.igdb-field:checked')).map(cb=>cb.getAttribute('data-field'));
+                // Example: fill the add/edit form with selected fields
+                if (fields.includes('cover') && game.cover && game.cover.url) document.getElementById('gameCover').value = 'https:' + game.cover.url;
+                if (fields.includes('name')) document.getElementById('gameTitle').value = game.name;
+                if (fields.includes('summary')) document.getElementById('gameDescription').value = game.summary || '';
+                if (fields.includes('rating') && game.rating) document.getElementById('gameDescription').value += `\nRating: ${game.rating.toFixed(1)}`;
+                M.updateTextFields();
+                M.Modal.getInstance(modal).close();
+            };
+            M.Modal.getInstance(modal).open();
+        }
+
+        async function showIgdbResultsInline(results, container, igdbRow) {
+            container.innerHTML = '';
+            if (!results.length) {
+                container.innerHTML = '<div class="card-panel yellow lighten-4">No IGDB results found.</div>';
+                return;
+            }
+            results.forEach((game, idx) => {
+                // Collect all possible cover images (cover + screenshots)
+                let images = [];
+                if (game.cover && game.cover.url) images.push({url: 'https:' + game.cover.url, type: 'cover'});
+                (game.screenshots || []).forEach(s => images.push({url: 'https:' + s.url, type: 'screenshot'}));
+                // Build image selection UI
+                const imageOptions = images.map((img, i) =>
+                    `<label style='margin-right:8px;cursor:pointer;display:inline-block;position:relative;'>
+                        <input type='radio' name='igdbCover${idx}' value='${img.url}' ${i===0?'checked':''} style='position:absolute;left:-9999px;'>
+                        <img src='${img.url}' data-full='${img.url.replace("t_thumb","t_1080p")}' class='igdb-cover-thumb' style='width:48px;height:48px;object-fit:cover;border-radius:4px;border:2px solid ${i===0 ? '#1976d2' : '#bbb'};margin-bottom:2px;box-shadow:0 1px 4px #0002;transition:border-color 0.2s,box-shadow 0.2s;'>
+                        <span style='display:block;font-size:0.7em;text-align:center;color:#888;'>${img.type}</span>
+                        <span class='igdb-cover-selected' style='display:${i===0?'block':'none'};position:absolute;top:2px;right:2px;background:#1976d2;color:#fff;border-radius:50%;width:18px;height:18px;font-size:1em;line-height:18px;text-align:center;box-shadow:0 1px 4px #0003;'>✓</span>
+                    </label>`
+                ).join('');
+                const rating = game.rating ? `<span style='font-size:0.9em;color:#888;'>Rating: ${game.rating.toFixed(1)}</span>` : '';
+                const summary = game.summary ? `<div style='font-size:0.95em;margin:8px 0;'>${game.summary.substring(0, 180)}${game.summary.length > 180 ? '...' : ''}</div>` : '';
+                const video = (game.videos && game.videos[0]) ? `<a href='https://youtube.com/watch?v=${game.videos[0].video_id}' target='_blank'>🎬</a>` : '';
+                container.innerHTML += `
+                    <div class='card' style='display:flex;align-items:flex-start;gap:16px;margin-bottom:16px;padding:12px;box-shadow:0 2px 8px #0001;'>
+                        <input type='radio' name='igdbSelect' value='${idx}' id='igdbRadio${idx}' style='margin-top:8px;'>
+                        <label for='igdbRadio${idx}' style='flex:1;cursor:pointer;'>
+                            <div style='display:flex;align-items:center;gap:16px;'>
+                                <div style='display:flex;flex-direction:column;align-items:center;'>
+                                    <div class='igdb-image-options' data-idx='${idx}'>${imageOptions}</div>
+                                </div>
+                                <div>
+                                    <b>${game.name}</b> ${rating} ${video}
+                                    ${summary}
+                                </div>
+                            </div>
+                            <div style='margin-top:8px;'>
+                                <label><input type='checkbox' class='igdb-field' data-field='cover' checked> Cover</label>
+                                <label><input type='checkbox' class='igdb-field' data-field='name' checked> Title</label>
+                                <label><input type='checkbox' class='igdb-field' data-field='summary' checked> Summary</label>
+                                <label><input type='checkbox' class='igdb-field' data-field='rating' ${game.rating ? 'checked' : 'disabled'}> Rating</label>
+                            </div>
+                        </label>
+                        <button class='btn blue igdb-import-btn' data-idx='${idx}' style='margin-left:16px;'>Import</button>
+                    </div>
+                `;
+            });
+            // Attach import button handlers
+            container.querySelectorAll('.igdb-import-btn').forEach(btn => {
+                btn.onclick = function() {
+                    const idx = parseInt(btn.getAttribute('data-idx'));
+                    const game = results[idx];
+                    const card = btn.closest('.card');
+                    const fields = Array.from(card.querySelectorAll('.igdb-field:checked')).map(cb=>cb.getAttribute('data-field'));
+                    // Get selected cover image
+                    let coverUrl = '';
+                    const selectedImg = card.querySelector(`.igdb-image-options input[type='radio']:checked`);
+                    if (selectedImg) coverUrl = selectedImg.value;
+                    // Helper to fill fields after modal is open
+                    function fillFields() {
+                        if (fields.includes('cover') && coverUrl) document.getElementById('gameCover').value = coverUrl;
+                        if (fields.includes('name')) document.getElementById('gameTitle').value = game.name;
+                        if (fields.includes('summary')) document.getElementById('gameDescription').value = game.summary || '';
+                        if (fields.includes('rating') && game.rating) document.getElementById('gameDescription').value += `\nRating: ${game.rating.toFixed(1)}`;
+                        M.updateTextFields();
+                    }
+                    // Check if form fields exist
+                    if (!document.getElementById('gameTitle') || !document.getElementById('gameCover')) {
+                        // Open add dialog, then fill fields after modal is rendered
+                        openGameDialog('add');
+                        setTimeout(fillFields, 200); // Wait for modal to render
+                    } else {
+                        fillFields();
+                    }
+                    if (openIgdbRow) { openIgdbRow.parentNode.removeChild(openIgdbRow); openIgdbRow = null; }
+                };
+            });
+            // Add mouseover for full-size preview
+            container.querySelectorAll('.igdb-image-options img').forEach(img => {
+                img.addEventListener('mouseenter', function(e) {
+                    let previewImg = document.getElementById('coverPreviewImg');
+                    if (!previewImg) {
+                        previewImg = document.createElement('img');
+                        previewImg.id = 'coverPreviewImg';
+                        previewImg.style.position = 'fixed';
+                        previewImg.style.zIndex = '3000';
+                        previewImg.style.display = 'none';
+                        previewImg.style.maxWidth = '320px';
+                        previewImg.style.maxHeight = '80vh';
+                        previewImg.style.boxShadow = '0 4px 24px rgba(0,0,0,0.25)';
+                        previewImg.style.borderRadius = '10px';
+                        previewImg.style.background = '#fff';
+                        previewImg.style.pointerEvents = 'none';
+                        document.body.appendChild(previewImg);
+                    }
+                    previewImg.src = this.getAttribute('data-full') || this.src;
+                    previewImg.style.display = 'block';
+                    // Position near mouse, but keep on screen
+                    const move = ev => {
+                        let x = ev.clientX + 24;
+                        let y = ev.clientY - 24;
+                        if (x + previewImg.width > window.innerWidth - 16) x = window.innerWidth - previewImg.width - 16;
+                        if (y + previewImg.height > window.innerHeight - 16) y = window.innerHeight - previewImg.height - 16;
+                        if (y < 0) y = 0;
+                        previewImg.style.left = x + 'px';
+                        previewImg.style.top = y + 'px';
+                    };
+                    move(e);
+                    window.addEventListener('mousemove', move);
+                    this._moveHandler = move;
+                });
+                img.addEventListener('mouseleave', function() {
+                    let previewImg = document.getElementById('coverPreviewImg');
+                    if (previewImg) previewImg.style.display = 'none';
+                    window.removeEventListener('mousemove', this._moveHandler);
+                });
+            });
+        }
+
+        // Materialize modal/select init
+        document.addEventListener('DOMContentLoaded', function() {
+            var modals = document.querySelectorAll('.modal');
+            M.Modal.init(modals);
+            // var sidenavs = document.querySelectorAll('.sidenav'); // Sidenav removed
+            // M.Sidenav.init(sidenavs, {edge: 'left'}); // Sidenav removed
+        });
+
+        // Event delegation for main game list cover image mouseover
+        document.getElementById('gamesTableBody').addEventListener('mouseover', function(event) {
+            if (event.target.tagName === 'IMG' && event.target.classList.contains('cover-thumb')) {
+                const targetImage = event.target;
+                let previewImg = document.getElementById('coverPreviewImg');
+                if (!previewImg) {
+                    previewImg = document.createElement('img');
+                    previewImg.id = 'coverPreviewImg';
+                    previewImg.style.position = 'fixed';
+                    previewImg.style.zIndex = '3000'; // Ensure it's on top
+                    previewImg.style.display = 'none';
+                    previewImg.style.maxWidth = '320px'; // Adjust as needed
+                    previewImg.style.maxHeight = '80vh';  // Adjust as needed
+                    previewImg.style.boxShadow = '0 4px 24px rgba(0,0,0,0.25)';
+                    previewImg.style.borderRadius = '10px';
+                    previewImg.style.background = '#fff'; // In case image is transparent
+                    previewImg.style.pointerEvents = 'none'; // So it doesn't interfere with mouse events
+                    document.body.appendChild(previewImg);
+                }
+                // Use the src of the cover-thumb as the full image.
+                // If you have a different URL for a larger version, you'd get it from a data-attribute.
+                previewImg.src = targetImage.src;
+                previewImg.style.display = 'block';
+
+                const moveHandler = (e) => {
+                    let x = e.clientX + 24; // Offset from cursor
+                    let y = e.clientY - 24; // Offset from cursor
+
+                    // Keep preview within viewport
+                    if (x + previewImg.offsetWidth > window.innerWidth - 16) {
+                        x = window.innerWidth - previewImg.offsetWidth - 16;
+                    }
+                    if (y + previewImg.offsetHeight > window.innerHeight - 16) {
+                        y = window.innerHeight - previewImg.offsetHeight - 16;
+                    }
+                    if (y < 16) y = 16; // Keep some space from top
+                    if (x < 16) x = 16; // Keep some space from left
+
+                    previewImg.style.left = x + 'px';
+                    previewImg.style.top = y + 'px';
+                };
+                moveHandler(event); // Initial position
+                targetImage._mouseMoveHandler = moveHandler; // Store for removal
+                targetImage._previewImgElement = previewImg; // Store for mouseleave
+                window.addEventListener('mousemove', targetImage._mouseMoveHandler);
+            }
+        });
+
+        document.getElementById('gamesTableBody').addEventListener('mouseout', function(event) {
+            if (event.target.tagName === 'IMG' && event.target.classList.contains('cover-thumb')) {
+                const targetImage = event.target;
+                if (targetImage._previewImgElement) {
+                    targetImage._previewImgElement.style.display = 'none';
+                }
+                if (targetImage._mouseMoveHandler) {
+                    window.removeEventListener('mousemove', targetImage._mouseMoveHandler);
+                    delete targetImage._mouseMoveHandler;
+                }
+            }
+        });
+
+        // Event delegation for table actions (Edit, Delete)
+        document.getElementById('gamesTableBody').addEventListener('click', function(event) {
+            const target = event.target;
+            const editButton = target.closest('.edit-game-btn');
+            const deleteButton = target.closest('.delete-game-btn');
+
+            if (editButton) {
+                event.preventDefault(); 
+                const originalIndex = parseInt(editButton.getAttribute('data-original-index'), 10);
+                if (!isNaN(originalIndex) && originalIndex >= 0 && originalIndex < retroNodeState.state.games.length) {
+                    const gameToEdit = retroNodeState.state.games[originalIndex];
+                    openGameDialog('edit', gameToEdit, originalIndex);
+                } else {
+                    M.toast({html: 'Error: Could not find game to edit.'});
+                }
+                return;
+            }
+
+            if (deleteButton) {
+                event.preventDefault(); 
+                const originalIndex = parseInt(deleteButton.getAttribute('data-original-index'), 10);
+                 if (!isNaN(originalIndex) && originalIndex >= 0 && originalIndex < retroNodeState.state.games.length) {
+                    const gameToDelete = retroNodeState.state.games[originalIndex];
+                    if (confirm(`Are you sure you want to delete "${gameToDelete.title || 'this game'}"?`)) {
+                        deleteGame(originalIndex);
+                    }
+                } else {
+                    M.toast({html: 'Error: Could not find game to delete.'});
+                }
+                return;
+            }
+        });
+
+        // Search handler
+        document.getElementById('searchInput').oninput = function() {
+            retroNodeState.setState({ 
+                searchTerm: this.value.trim().toLowerCase(),
+                currentPage: 1 // Reset to first page on new search
+            });
+        };
+
+        // Sort handlers
+        document.getElementById('sortTitle').onclick = function() {
+            const currentSortField = retroNodeState.state.sortField;
+            const currentSortAsc = retroNodeState.state.sortAsc;
+            let newSortField = 'title';
+            let newSortAsc = true;
+            if (currentSortField === 'title') {
+                newSortAsc = !currentSortAsc;
+            }
+            retroNodeState.setState({ sortField: newSortField, sortAsc: newSortAsc, currentPage: 1 });
+        };
+        document.getElementById('sortPlatform').onclick = function() {
+            const currentSortField = retroNodeState.state.sortField;
+            const currentSortAsc = retroNodeState.state.sortAsc;
+            let newSortField = 'platforms';
+            let newSortAsc = true;
+            if (currentSortField === 'platforms') {
+                newSortAsc = !currentSortAsc;
+            }
+            retroNodeState.setState({ sortField: newSortField, sortAsc: newSortAsc, currentPage: 1 });
+        };
+
+        // Update sort icons based on state (to be called in retroNodeState.subscribe or renderGamesTable)
+
+        // Ensure addGameBtn exists before attaching handler
+        const addGameBtn = document.getElementById('addGameBtn');
+        if (addGameBtn) {
+            addGameBtn.onclick = function(e) {
+                e.preventDefault();
+                openGameDialog('add');
+            };
+        }
+
+        // Platform filter handler (moved out of renderPlatformFilter to avoid re-binding issues)
+        document.getElementById('platformFilter').onchange = function() {
+            retroNodeState.setPlatformFilter(this.value); // Use the state manager method
+        };
+
+
+// Subscribe to state changes
+retroNodeState.subscribe((newGlobalState) => { // newGlobalState is retroNodeState.state
+    renderGamesTable();
+    renderPlatformFilter();
+    // Update sort icons
+    const titleIcon = document.getElementById('sortTitleIcon');
+    const platformIcon = document.getElementById('sortPlatformIcon');
+    if (titleIcon) {
+        titleIcon.textContent = newGlobalState.sortField === 'title' ? (newGlobalState.sortAsc ? 'arrow_drop_up' : 'arrow_drop_down') : 'unfold_more';
+    }
+    if (platformIcon) {
+        platformIcon.textContent = newGlobalState.sortField === 'platforms' ? (newGlobalState.sortAsc ? 'arrow_drop_up' : 'arrow_drop_down') : 'unfold_more';
+    }
+    // Update totalItems in state if filters change (renderGamesTable calculates filtered.length)
+    // This might be better done directly after filtering in renderGamesTable if it's the sole source of truth for filtered length.
+    // For now, renderGamesTable updates its local calculation. If totalItems in global state needs to reflect filtered count,
+    // renderGamesTable should call retroNodeState.setState({ totalItems: filtered.length }) if it changed.
+});
+
+// Load initial data using methods from retroNodeState
+// This ensures the data processing logic within RetroNodeState (like extracting platforms from .data) is used.
+async function loadInitialData() {
+    try {
+        // Set loading true if you have a global loading indicator tied to retroNodeState.isLoading
+        // retroNodeState.setState({ isLoading: true }); 
+        await Promise.all([
+            retroNodeState.loadGames(),   // loadGames will set its own loading/error states
+            retroNodeState.loadPlatforms() // loadPlatforms will set its own error state if any
+        ]);
+    } catch (error) {
+        retroNodeState.setState({ error: 'Critical error loading page data.', isLoading: false });
+    }
+}
+loadInitialData();
+
+        // Patch the IGDB button handler to show results inline under the relevant game row
+        let openIgdbRow = null;
+        document.addEventListener('click', async function(e) {
+            if (e.target.closest('.igdb-btn')) {
+                e.preventDefault();
+                const btn = e.target.closest('.igdb-btn');
+                const title = decodeURIComponent(btn.getAttribute('data-title'));
+                const rowIdx = btn.getAttribute('data-row');
+                // Remove any existing IGDB inline rows
+                if (openIgdbRow) {
+                    openIgdbRow.parentNode.removeChild(openIgdbRow);
+                    openIgdbRow = null;
+                }
+                // Find the table row to insert after
+                const tr = btn.closest('tr');
+                // Insert a new row for IGDB results
+                const igdbRow = document.createElement('tr');
+                igdbRow.className = 'igdb-inline-row';
+                igdbRow.innerHTML = `<td colspan="5"><div class="igdb-inline-section" style="margin-left:32px;"><div class="progress"><div class="indeterminate"></div></td>`;
+                tr.parentNode.insertBefore(igdbRow, tr.nextSibling);
+                openIgdbRow = igdbRow;
+                // Fetch IGDB results
+                const igdbResp = await fetch('/api/igdb/game', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title })
+                });
+                const igdbData = await igdbResp.json();
+
+                const section = igdbRow.querySelector('.igdb-inline-section');
+                section.innerHTML = '';
+                if (igdbData && igdbData.results && igdbData.results.length) {
+                    console.log('[Inline Table IGDB] IGDB data has results. Proceeding to render images and attach listeners.');
+
+                    try {
+                        igdbData.results.forEach((game, idx) => {
+                            // Collect all possible cover images (cover + screenshots)
+                            let images = [];
+                            if (game.cover && game.cover.url) images.push({url: 'https:' + game.cover.url, type: 'cover'});
+                            (game.screenshots || []).forEach(s => { if (s && s.url) images.push({url: 'https:' + s.url, type: 'screenshot'}); });
+                            // Build image selection UI
+                            const imageOptions = images.map((img, i) => {
+                                const fullUrl = img.url && typeof img.url.replace === 'function' ? img.url.replace("t_thumb","t_1080p") : (img.url || '');
+                                return `<label style='margin-right:8px;cursor:pointer;display:inline-block;position:relative;'>
+                                    <input type='radio' name='igdbCover${idx}' value='${img.url || ''}' ${i===0?'checked':''} style='position:absolute;left:-9999px;'>
+                                    <img src='${img.url || ''}' data-full='${fullUrl}' class='igdb-cover-thumb' style='width:48px;height:48px;object-fit:cover;border-radius:4px;border:2px solid ${i===0 ? '#1976d2' : '#bbb'};margin-bottom:2px;box-shadow:0 1px 4px #0002;transition:border-color 0.2s,box-shadow 0.2s;'>
+                                    <span style='display:block;font-size:0.7em;text-align:center;color:#888;'>${img.type || 'image'}</span>
+                                    <span class='igdb-cover-selected' style='display:${i===0?'block':'none'};position:absolute;top:2px;right:2px;background:#1976d2;color:#fff;border-radius:50%;width:18px;height:18px;font-size:1em;line-height:18px;text-align:center;box-shadow:0 1px 4px #0003;'>✓</span>
+                                </label>`;
+                            }).join('');
+                            const rating = game.rating ? `<span style='font-size:0.9em;color:#888;'>Rating: ${Number(game.rating).toFixed(1)}</span>` : '';
+                            const summary = game.summary ? `<div style='font-size:0.95em;margin:8px 0;'>${String(game.summary).substring(0, 180)}${String(game.summary).length > 180 ? '...' : ''}</div>` : '';
+                            const video = (game.videos && game.videos[0] && game.videos[0].video_id) ? `<a href='https://youtube.com/watch?v=${game.videos[0].video_id}' target='_blank'>🎬</a>` : '';
+                            section.innerHTML += `
+                                <div class='card' style='display:flex;align-items:flex-start;gap:16px;margin-bottom:16px;padding:12px;box-shadow:0 2px 8px #0001;'>
+                                    <div style='flex:1;'>
+                                        <div style='display:flex;align-items:center;gap:16px;'>
+                                            <div style='display:flex;flex-direction:column;align-items:center;'>
+                                                <div class='igdb-image-options' data-idx='${idx}'>${imageOptions}</div>
+                                            </div>
+                                            <div>
+                                                <b>${game.name || 'No Name'}</b> ${rating} ${video}
+                                                ${summary}
+                                            </div>
+                                        </div>
+                                        <div style='margin-top:8px;'>
+                                            <label><input type='checkbox' class='igdb-field' data-field='cover' checked> Cover</label>
+                                            <label><input type='checkbox' class='igdb-field' data-field='name' checked> Title</label>
+                                            <label><input type='checkbox' class='igdb-field' data-field='summary' checked> Summary</label>
+                                            <label><input type='checkbox' class='igdb-field' data-field='rating' ${game.rating ? 'checked' : 'disabled'}> Rating</label>
+                                        </div>
+                                    </div>
+                                    <button class='btn blue igdb-import-btn' data-idx='${idx}' style='margin-left:16px;'>Import</button>
+                                </div>
+                            `;
+                        });
+                    } catch (renderError) {
+                        console.error('[Inline Table IGDB] Error during HTML rendering loop:', renderError);
+                        section.innerHTML = '<div class="card-panel red lighten-4">Error rendering IGDB results. Check console.</div>';
+                        return; // Stop further processing if rendering fails
+                    }
+
+                    // Attach import button handlers
+                    try {
+                        section.querySelectorAll('.igdb-import-btn').forEach(btn2 => {
+                            btn2.onclick = function() {
+                                const idx2 = parseInt(btn2.getAttribute('data-idx'));
+                                const game2 = igdbData.results[idx2];
+                                const card = btn2.closest('.card');
+                                const fields = Array.from(card.querySelectorAll('.igdb-field:checked')).map(cb=>cb.getAttribute('data-field'));
+                                // Get selected cover image
+                                let coverUrl = '';
+                                const selectedImgRadio = card.querySelector(`.igdb-image-options input[type='radio']:checked`);
+                                if (selectedImgRadio) coverUrl = selectedImgRadio.value;
+                                // Helper to fill fields after modal is open
+                                function fillFields() {
+                                    if (fields.includes('cover') && coverUrl) document.getElementById('gameCover').value = coverUrl;
+                                    if (fields.includes('name') && game2.name) document.getElementById('gameTitle').value = game2.name;
+                                    if (fields.includes('summary') && game2.summary) document.getElementById('gameDescription').value = game2.summary || '';
+                                    if (fields.includes('rating') && game2.rating) document.getElementById('gameDescription').value += `\nRating: ${Number(game2.rating).toFixed(1)}`;
+                                    M.updateTextFields();
+                                }
+                                // Check if form fields exist (i.e. if the main modal is open)
+                                if (!document.getElementById('gameTitle') || !document.getElementById('gameCover')) {
+                                    // Open add dialog, then fill fields after modal is rendered
+                                    openGameDialog('add'); // This opens the main game dialog
+                                    setTimeout(fillFields, 200); // Wait for modal to render
+                                } else {
+                                    fillFields(); // Main game dialog is already open, just fill its fields
+                                }
+                                if (openIgdbRow) { openIgdbRow.parentNode.removeChild(openIgdbRow); openIgdbRow = null; }
+                            };
+                        });
+                    } catch (importBtnError) {
+                        console.error('[Inline Table IGDB] Error attaching import button listeners:', importBtnError);
+                        // Continue to attach mouseover if possible, or show an error
+                    }
+
+                    console.log('[Inline Table IGDB] HTML content of section right before querySelectorAll:');
+                    console.log(section.innerHTML);
+
+                    const inlineTableIgdbImages = section.querySelectorAll('.igdb-image-options img');
+                    console.log(`[Inline Table IGDB] Images found by querySelectorAll('.igdb-image-options img'):`, inlineTableIgdbImages.length, inlineTableIgdbImages);
+                    // Add mouseover for full-size preview
+                    inlineTableIgdbImages.forEach(img => {
+                        img.addEventListener('mouseenter', function(e) {
+                            console.log('Mouse entered IGDB image (inline table):', this.src, 'Full size:', this.getAttribute('data-full'));
+                            let previewImg = document.getElementById('coverPreviewImg');
+                            if (!previewImg) {
+                                previewImg = document.createElement('img');
+                                previewImg.id = 'coverPreviewImg';
+                                previewImg.style.position = 'fixed';
+                                previewImg.style.zIndex = '3000';
+                                previewImg.style.display = 'none';
+                                previewImg.style.maxWidth = '320px';
+                                previewImg.style.maxHeight = '80vh';
+                                previewImg.style.boxShadow = '0 4px 24px rgba(0,0,0,0.25)';
+                                previewImg.style.borderRadius = '10px';
+                                previewImg.style.background = '#fff';
+                                previewImg.style.pointerEvents = 'none';
+                                document.body.appendChild(previewImg);
+                            }
+                            previewImg.src = this.getAttribute('data-full') || this.src;
+                            previewImg.style.display = 'block';
+                            // Position near mouse, but keep on screen
+                            const move = ev => {
+                                let x = ev.clientX + 24;
+                                let y = ev.clientY - 24;
+                                if (x + previewImg.width > window.innerWidth - 16) x = window.innerWidth - previewImg.width - 16;
+                                if (y + previewImg.height > window.innerHeight - 16) y = window.innerHeight - previewImg.height - 16;
+                                if (y < 0) y = 0;
+                                previewImg.style.left = x + 'px';
+                                previewImg.style.top = y + 'px';
+                            };
+                            move(e);
+                            window.addEventListener('mousemove', move);
+                            this._moveHandler = move;
+                        });
+                        img.addEventListener('mouseleave', function() {
+                            let previewImg = document.getElementById('coverPreviewImg');
+                            if (previewImg) previewImg.style.display = 'none';
+                            window.removeEventListener('mousemove', this._moveHandler);
+                        });
+                    });
+                    setTimeout(() => {
+                        section.querySelectorAll('.igdb-image-options').forEach(optGroup => {
+                            const radios = optGroup.querySelectorAll('input[type="radio"]');
+                            radios.forEach(radio => {
+                                radio.addEventListener('change', function() {
+                                    optGroup.querySelectorAll('img.igdb-cover-thumb').forEach(img => {
+                                        img.style.borderColor = '#bbb';
+                                        img.style.boxShadow = '0 1px 4px #0002';
+                                    });
+                                    optGroup.querySelectorAll('.igdb-cover-selected').forEach(sel => sel.style.display = 'none');
+                                    const selectedLabel = this.closest('label');
+                                    const img = selectedLabel.querySelector('img.igdb-cover-thumb');
+                                    const sel = selectedLabel.querySelector('.igdb-cover-selected');
+                                    if (img) {
+                                        img.style.borderColor = '#1976d2';
+                                        img.style.boxShadow = '0 0 0 2px #1976d2,0 1px 4px #0002';
+                                    }
+                                    if (sel) sel.style.display = 'block';
+                                });
+                            });
+                        });
+                    }, 0);
+                } else {
+                    section.innerHTML = '<div class="card-panel yellow lighten-4">No IGDB results found.</div>';
+                }
+            }
+        });
+
+        // --- TheGamesDB Search Functionality (for Dialog) ---
+        function initializeTheGamesDBSearchInDialog() {
+            const theGamesDBDialogButton = document.getElementById('theGamesDBDialogImportBtn');
+            if (theGamesDBDialogButton) {
+                theGamesDBDialogButton.addEventListener('click', handleTheGamesDBSearchInDialog);
+            } else {
+                console.warn('TheGamesDB dialog import button (id="theGamesDBDialogImportBtn") not found.');
+            }
+        }
+
+        async function handleTheGamesDBSearchInDialog() {
+            const gameTitleInput = document.getElementById('gameTitle'); // Title from the dialog form
+            const resultsContainer = document.getElementById('theGamesDBInlineResults');
+            const searchButton = document.getElementById('theGamesDBDialogImportBtn');
+
+            if (!gameTitleInput || !resultsContainer || !searchButton) {
+                M.toast({html: 'Required elements for TheGamesDB search are missing.'});
+                return;
+            }
+
+            const gameTitle = gameTitleInput.value.trim();
+            if (!gameTitle) {
+                M.toast({html: 'Please enter a game title in the form to search TheGamesDB.'});
+                return;
+            }
+
+            searchButton.disabled = true;
+            searchButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Searching TheGamesDB...';
+            resultsContainer.innerHTML = '<div class="progress" style="margin-top:10px;"><div class="indeterminate"></div></div>';
+
+            try {
+                const response = await fetch(`/api/thegamesdb/search?name=${encodeURIComponent(gameTitle)}`);
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({ message: `Request failed with status ${response.status}` }));
+                    throw new Error(errorData.message || `TheGamesDB API request failed`);
+                }
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error(data.message || 'Failed to fetch data from TheGamesDB.');
+                }
+                displayTheGamesDBResultsInDialog(data.results, data.imageBaseUrl, resultsContainer);
+            } catch (error) {
+                console.error('Error searching TheGamesDB (dialog):', error);
+                resultsContainer.innerHTML = `<div class="card-panel red lighten-4" style="margin-top:10px;">Error: ${error.message}</div>`;
+            } finally {
+                searchButton.disabled = false;
+                searchButton.innerHTML = '<i class="material-icons left">storage</i>TheGamesDB';
+            }
+        }
+
+        function displayTheGamesDBResultsInDialog(games, imageBaseUrl, containerElement) {
+            if (!games || games.length === 0) {
+                containerElement.innerHTML = '<div class="card-panel yellow lighten-4" style="margin-top:10px;">No results found on TheGamesDB.</div>';
+                return;
+            }
+
+            let resultsHTML = '<h6>TheGamesDB Results:</h6>';
+            games.slice(0, 5).forEach((game, index) => { // Limit to 5 results for inline display
+                // Use the pre-constructed thumb URL, fallback to large, then to default
+                const displayThumbnailUrl = game.boxart_thumb_url || game.boxart_large_url || '/img/default-cover.png';
+                const releaseDateDisplay = game.release_date ? new Date(game.release_date).toLocaleDateString() : 'N/A';
+
+                let platformDisplayName = 'N/A';
+                if (game.platform && Array.isArray(retroNodeState.state.platforms)) {
+                    const matchedPlatform = retroNodeState.state.platforms.find(p => p.thegamesdb_id === parseInt(game.platform, 10));
+                    if (matchedPlatform) {
+                        platformDisplayName = matchedPlatform.name;
+                    } else {
+                        platformDisplayName = `ID: ${game.platform}`; // Fallback if no name found
+                    }
+                } else if (game.platform) {
+                    platformDisplayName = `ID: ${game.platform}`; // Fallback if platforms not loaded or not an array
+                }
+
+                resultsHTML += `
+                    <div class="card" style="margin-bottom: 10px; padding: 10px; display: flex; align-items: center;">
+                        <img src="${displayThumbnailUrl}" alt="${game.game_title || 'Cover'}" style="width: 50px; height: 60px; object-fit: cover; margin-right: 10px; border-radius: 3px;">
+                        <div style="flex-grow: 1;">
+                            <strong>${game.game_title || 'N/A'}</strong><br>
+                            <small>Platform: ${platformDisplayName} | Released: ${releaseDateDisplay}</small>
+                            ${game.overview ? `<p style="font-size: 0.9em; margin-top: 5px; max-height: 60px; overflow: hidden; text-overflow: ellipsis;">${game.overview.substring(0,150)}...</p>` : ''}
+                        </div>
+                        <button class="btn-small waves-effect waves-light blue import-tgdb-dialog-btn" data-game-index="${index}" type="button" style="margin-left:10px;">Import</button>
+                    </div>
+                `;
+            });
+            containerElement.innerHTML = resultsHTML;
+
+            containerElement.querySelectorAll('.import-tgdb-dialog-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const gameIndex = parseInt(event.target.getAttribute('data-game-index'), 10);
+                    const selectedGame = games[gameIndex];
+                    if (selectedGame) {
+                        populateDialogFormWithTheGamesDBData(selectedGame, imageBaseUrl);
+                        containerElement.innerHTML = ''; // Clear results after import
+                    }
+                });
+            });
+        }
+
+        function populateDialogFormWithTheGamesDBData(gameData, imageBaseUrl) {
+            const titleField = document.getElementById('gameTitle');
+            const descriptionField = document.getElementById('gameDescription');
+            const coverField = document.getElementById('gameCover');
+            const platformSelectElement = document.getElementById('gamePlatforms');
+
+            if (titleField && gameData.game_title) titleField.value = gameData.game_title;
+            if (descriptionField && gameData.overview) descriptionField.value = gameData.overview;
+            if (coverField) {
+                coverField.value = gameData.boxart_large_url || ''; // Use the pre-constructed large URL
+            }
+
+            // Attempt to pre-select the platform
+            if (gameData.platform && platformSelectElement && Array.isArray(retroNodeState.state.platforms)) {
+                const tgdbPlatformId = parseInt(gameData.platform, 10);
+                const matchedPlatform = retroNodeState.state.platforms.find(p => p.thegamesdb_id === tgdbPlatformId);
+
+                if (matchedPlatform && matchedPlatform.id) {
+                    // Clear existing selections first if you want to replace, or add if multiple are allowed from different sources
+                    // For now, let's assume we are adding/selecting this one.
+                    const optionToSelect = Array.from(platformSelectElement.options).find(opt => opt.value === matchedPlatform.id);
+                    if (optionToSelect) {
+                        optionToSelect.selected = true;
+                    }
+                }
+            }
+
+            M.updateTextFields(); // Important for Materialize text fields
+            if (platformSelectElement) M.FormSelect.init(platformSelectElement); // Re-initialize Materialize select
+            M.toast({html: `Imported "${gameData.game_title}" from TheGamesDB. Review and save.`});
+        }
+        // --- End of TheGamesDB Search Functionality (for Dialog) ---
+
+        function updatePagination() {
+            // Calculate total pages
+            const { currentPage, totalItems, itemsPerPage } = retroNodeState.state;
+            const totalPages = Math.ceil(totalItems / itemsPerPage) || 1; // Ensure at least 1 page
+            
+            // Add pagination controls
+            const paginationContainer = document.createElement('div');
+            paginationContainer.className = 'pagination center-align';
+            paginationContainer.style.marginTop = '20px';
+
+            // Previous button
+            const prevBtn = document.createElement('a');
+            prevBtn.className = `waves-effect waves-light btn-flat ${currentPage === 1 ? 'disabled' : ''}`;
+            prevBtn.innerHTML = '<i class="material-icons">chevron_left</i>';
+            prevBtn.onclick = () => {
+                if (currentPage > 1) {
+                    retroNodeState.setState({ currentPage: currentPage - 1 });
+                }
+            };
+            
+            // Next button
+            const nextBtn = document.createElement('a');
+            nextBtn.className = `waves-effect waves-light btn-flat ${currentPage >= totalPages ? 'disabled' : ''}`;
+            nextBtn.innerHTML = '<i class="material-icons">chevron_right</i>';
+            nextBtn.onclick = () => {
+                if (currentPage < totalPages) {
+                    retroNodeState.setState({ currentPage: currentPage + 1 });
+                }
+            };
+            
+            // Page numbers
+            const pageSpan = document.createElement('span');
+            pageSpan.style.margin = '0 16px';
+            pageSpan.textContent = `Page ${currentPage} of ${totalPages}`;
+            
+            paginationContainer.appendChild(prevBtn);
+            paginationContainer.appendChild(pageSpan);
+            paginationContainer.appendChild(nextBtn);
+            
+            // Replace any existing pagination
+            const existingPagination = document.querySelector('.pagination');
+            if (existingPagination) {
+                existingPagination.replaceWith(paginationContainer);
+            } else {
+                document.getElementById('gamesTableBody').parentElement.after(paginationContainer);
+            }
+        }
+    </script>
+</body>
+</html>

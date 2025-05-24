@@ -1,0 +1,7 @@
+{
+  "tasks": {
+    "start": "deno run --allow-net --allow-env --allow-read --watch=static/,routes/,data/ app.js",
+    "test": "deno test --allow-net",
+    "lint": "deno lint"
+  }
+}
