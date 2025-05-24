@@ -285,6 +285,10 @@
                     <td>${game.description || 'No description'}</td>
                     <td>${platformNames || 'No platforms'}</td>
                     <td style="white-space:nowrap;">
+                        <button class="btn-flat green-text play-game-btn" data-original-index="${originalGameIndex}" title="Play">
+                            <i class="material-icons">play_arrow</i>
+                        </button>
+
                         <button class="btn-flat blue-text edit-game-btn" data-original-index="${originalGameIndex}" title="Edit">
                             <i class="material-icons">edit</i>
                         </button>
@@ -951,6 +955,7 @@
         document.getElementById('gamesTableBody').addEventListener('click', function(event) {
             const target = event.target;
             const editButton = target.closest('.edit-game-btn');
+            const playButton = target.closest('.play-game-btn');
             const deleteButton = target.closest('.delete-game-btn');
 
             if (editButton) {
@@ -965,6 +970,20 @@
                 return;
             }
 
+            if (playButton) {
+                event.preventDefault();
+                const originalIndex = parseInt(playButton.getAttribute('data-original-index'), 10);
+                if (!isNaN(originalIndex) && originalIndex >= 0 && originalIndex < retroNodeState.state.games.length) {
+                    const gameToPlay = retroNodeState.state.games[originalIndex];
+                    console.log(`Play game: ${gameToPlay.title}`, gameToPlay);
+                    M.toast({html: `Initiating play for ${gameToPlay.title || 'this game'}...`});
+                    // Future: Add actual game launching logic here
+                    // e.g., window.location.href = `/play/${gameToPlay.id}`;
+                } else {
+                    M.toast({html: 'Error: Could not find game to play.'});
+                }
+                return;
+            }
             if (deleteButton) {
                 event.preventDefault(); 
                 const originalIndex = parseInt(deleteButton.getAttribute('data-original-index'), 10);
