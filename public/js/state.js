@@ -55,7 +55,7 @@ export class RetroNodeState {
         order: this.state.sortAsc ? 'asc' : 'desc'
       });
 
-      const response = await fetch('/api/games?' + params);
+      const response = await fetch(`/api/games?${params}`);
       const data = await response.json();
 
       if (!data.success) {

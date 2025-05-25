@@ -6,7 +6,7 @@ import { showToastAndLog } from './gameUtils.js';
 
 
 export function openGameDialog(mode, game = {}, originalIndex = null, onFormSubmitCallback) {
-    if (!window.openModal || !window.closeModal || !window.showLoadingOverlay) {
+    if (!globalThis.openModal || !globalThis.closeModal || !globalThis.showLoadingOverlay) {
         console.error("Modal or Loading Overlay functions not found globally.");
         return;
     }
@@ -20,7 +20,8 @@ export function openGameDialog(mode, game = {}, originalIndex = null, onFormSubm
         platformOptions = retroNodeState.state.platforms.map(p_obj => {
             const platformId = p_obj.id;
             const platformName = p_obj.name;
-            const isSelected = game.platforms && game.platforms.hasOwnProperty(platformId);
+            // Use Object.prototype.hasOwnProperty.call for safer property checking
+            const isSelected = game.platforms && typeof game.platforms === 'object' && Object.prototype.hasOwnProperty.call(game.platforms, platformId);
             return `<option value="${platformId}" ${isSelected ? 'selected' : ''}>${platformName}</option>`;
         }).join('');
     }
@@ -71,7 +72,7 @@ export function openGameDialog(mode, game = {}, originalIndex = null, onFormSubm
         };
     }
 
-    window.openModal('crudDialog');
+    globalThis.openModal('crudDialog');
 
     // Attach handlers for buttons inside the dialog
     // Use setTimeout to ensure elements are in DOM if openModal is async or has transitions
@@ -129,7 +130,7 @@ function attachIgdbSearchHandler() {
                 resultsDiv.innerHTML = ''; 
                 if (igdbData && igdbData.results && igdbData.results.length) {
                     igdbData.results.slice(0,3).forEach((game, idx) => {
-                        let images = [];
+                        const images = [];
                         if (game.cover && game.cover.url) images.push({url: 'https:' + game.cover.url, type: 'cover'});
                         (game.screenshots || []).forEach(s => images.push({url: 'https:' + s.url, type: 'screenshot'}));
                         
@@ -223,21 +224,21 @@ function handleDialogImagePreviewEnter(e) {
     const move = ev => {
         let x = ev.clientX + 20;
         let y = ev.clientY - previewImg.offsetHeight / 2;
-        if (x + previewImg.offsetWidth > window.innerWidth - 10) x = ev.clientX - previewImg.offsetWidth - 20;
-        if (y + previewImg.offsetHeight > window.innerHeight - 10) y = window.innerHeight - previewImg.offsetHeight - 10;
+        if (x + previewImg.offsetWidth > globalThis.innerWidth - 10) x = ev.clientX - previewImg.offsetWidth - 20;
+        if (y + previewImg.offsetHeight > globalThis.innerHeight - 10) y = globalThis.innerHeight - previewImg.offsetHeight - 10;
         if (y < 10) y = 10;
         previewImg.style.left = x + 'px';
         previewImg.style.top = y + 'px';
     };
     move(e);
     this._moveHandlerDialog = move;
-    window.addEventListener('mousemove', this._moveHandlerDialog);
+    globalThis.addEventListener('mousemove', this._moveHandlerDialog);
 }
 
 function handleDialogImagePreviewLeave() {
-    let previewImg = document.getElementById('coverPreviewImgDialog');
+    const previewImg = document.getElementById('coverPreviewImgDialog');
     if (previewImg) previewImg.classList.add('hidden');
-    if(this._moveHandlerDialog) window.removeEventListener('mousemove', this._moveHandlerDialog);
+    if(this._moveHandlerDialog) globalThis.removeEventListener('mousemove', this._moveHandlerDialog);
 }
 
 
