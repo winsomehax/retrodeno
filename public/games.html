@@ -509,19 +509,6 @@
             showToastAndLog(`Data for ${game.name} ready to import.`, 'info');
         }
 
-
-        // showIgdbResultsInline is largely superseded by the IGDB search within the crudDialog.
-        // The logic for rendering IGDB results within the dialog is now part of openGameDialog.
-        // If a separate inline table row IGDB search is still desired, that would need specific UI triggers and rendering logic.
-        // For now, I'm assuming the dialog's IGDB search is the primary one.
-
-
-        // Materialize modal/select init - REMOVED
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     var modals = document.querySelectorAll('.modal');
-        //     M.Modal.init(modals);
-        // });
-
         // Event delegation for main game list cover image mouseover
         document.getElementById('gamesTableBody').addEventListener('mouseover', function(event) {
             if (event.target.tagName === 'IMG' && event.target.classList.contains('cover-thumb')) {
@@ -605,13 +592,6 @@
             const editButton = target.closest('.edit-game-btn');
             const playButton = target.closest('.play-game-btn');
             const deleteButton = target.closest('.delete-game-btn');
-
-            // Note: The actual logic is now called via renderGamesTableModule's callbacks.
-            // This delegation can be removed if the buttons rendered by renderGamesTableModule
-            // have their event listeners attached directly, which is the current approach in gamesTableRenderer.js
-            // If we keep this, ensure data-original-index is still correctly used.
-            // For now, the direct attachment in gamesTableRenderer.js is preferred.
-            // This block can be simplified or removed if direct attachment is reliable.
 
             if (editButton) {
                 event.preventDefault(); 
@@ -703,17 +683,6 @@ async function loadInitialData() {
     }
 }
 loadInitialData();
-
-        // The inline IGDB search (triggered by a button in each game row) is removed.
-        // The IGDB search is now primarily within the `openGameDialog` (crudDialog).
-        // If you still need the per-row IGDB search, it would need to be re-implemented
-        // with Tailwind for its UI, and its logic to populate the main `crudDialog`
-        // or a separate IGDB modal would need to be carefully managed.
-
-        // TheGamesDB and IGDB separate modal functions (showIgdbResults, populateGameFormWithIgdbData)
-        // are now primarily handled within gameDialog.js for the inline dialog search.
-        // If the separate IGDB modal is still needed, its functions would be here or in their own module.
-        // For now, assuming the dialog's internal search is the main path.
 
      </script>
  </body>
