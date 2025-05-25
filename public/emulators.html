@@ -4,112 +4,140 @@
     <meta charset="UTF-8">
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retronode - Emulators</title>
+    <title>Retronode - Emulators (Tailwind)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        body { background: #f5f5f5; color: #222; font-family: 'Roboto', Arial, sans-serif; margin: 0; padding: 0; min-height: 100vh; }
-        .main-title { margin-top: 48px; font-weight: 500; letter-spacing: 1px; }
-        .fab-main { position: fixed; bottom: 36px; right: 36px; z-index: 1001; }
-        .fab-secondary { position: fixed; bottom: 100px; right: 36px; z-index: 1001; }
-        .modal { max-width: 480px; }
-        .modal .modal-content {
-            max-height: 70vh;
-            overflow-y: auto;
+        body { font-family: 'Roboto', sans-serif; }
+        /* Basic modal styling - can be enhanced */
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
         }
-        .platform-header {
-            background-color: #e0e0e0;
-            padding: 8px 16px;
-            font-weight: 500;
-            margin-top: 16px;
-            border-radius: 4px;
-        }
-         /* Loading indicator styles */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-        .loading-overlay.visible {
-            opacity: 1;
-            pointer-events: all;
-        }
-        .error-message-toast { /* Using materialize toast for errors now */ }
     </style>
 </head>
-<body>
-    <!-- Sidenav and TopNav removed -->
-    <div class="container" style="margin-top:48px;max-width:1100px;">
-        <h4 class="main-title green-text text-darken-2" style="margin-bottom:24px;">Emulators</h4>
+<body class="bg-gray-100 text-gray-800 min-h-screen">
+    <div id="toast-container" class="fixed top-5 right-5 z-[9999] space-y-2"></div>
+
+    <div class="container mx-auto px-4 py-12 max-w-4xl">
+        <h1 class="text-3xl font-semibold text-green-700 mb-6 tracking-wide">Emulators</h1>
 
         <div id="emulatorsContainer">
             <!-- Emulators will be rendered here by platform -->
         </div>
 
-        <div id="loadingIndicator" class="progress" style="display: none; margin-top: 20px;">
-            <div class="indeterminate"></div>
+        <div id="loadingIndicator" class="hidden mt-5 text-center">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500"></div>
+            <p class="text-green-600">Loading emulators...</p>
         </div>
-        <p id="errorMessage" class="red-text" style="display: none;"></p>
+        <p id="errorMessage" class="text-red-600 mt-4 hidden"></p>
     </div>
 
-    <div id="emulatorDialog" class="modal">
-        <div class="modal-content">
-            <h5 id="emulatorDialogTitle"></h5>
+    <!-- Emulator Dialog Modal -->
+    <div id="emulatorDialog" class="fixed inset-0 z-50 hidden items-center justify-center modal-overlay">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-md max-h-[80vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h5 id="emulatorDialogTitle" class="text-xl font-semibold"></h5>
+                <button onclick="closeModal('emulatorDialog')" class="text-gray-500 hover:text-gray-700">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
             <form id="emulatorForm">
                 <input type="hidden" id="emulatorPlatformId">
                 <input type="hidden" id="originalEmulatorId">
-                <div class="input-field">
-                    <input id="emulatorId" type="text" required>
-                    <label for="emulatorId" class="active">Emulator ID (e.g., snes9x_libretro)</label>
+                <div class="mb-4">
+                    <label for="emulatorId" class="block text-sm font-medium text-gray-700 mb-1">Emulator ID (e.g., snes9x_libretro)</label>
+                    <input id="emulatorId" type="text" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
                 </div>
-                <div class="input-field">
-                    <input id="emulatorName" type="text" required>
-                    <label for="emulatorName" class="active">Emulator Name (e.g., Snes9x)</label>
+                <div class="mb-4">
+                    <label for="emulatorName" class="block text-sm font-medium text-gray-700 mb-1">Emulator Name (e.g., Snes9x)</label>
+                    <input id="emulatorName" type="text" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
                 </div>
-                <div class="input-field">
-                    <input id="emulatorDescription" type="text">
-                    <label for="emulatorDescription" class="active">Description</label>
+                <div class="mb-4">
+                    <label for="emulatorDescription" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <input id="emulatorDescription" type="text" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
                 </div>
-                <div class="input-field">
-                    <input id="emulatorVersion" type="text">
-                    <label for="emulatorVersion" class="active">Version</label>
+                <div class="mb-4">
+                    <label for="emulatorVersion" class="block text-sm font-medium text-gray-700 mb-1">Version</label>
+                    <input id="emulatorVersion" type="text" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
                 </div>
-                <div class="input-field">
-                    <input id="emulatorCommand" type="text" required>
-                    <label for="emulatorCommand" class="active">Command (e.g., snes9x_libretro.so)</label>
+                <div class="mb-4">
+                    <label for="emulatorCommand" class="block text-sm font-medium text-gray-700 mb-1">Command (e.g., snes9x_libretro.so)</label>
+                    <input id="emulatorCommand" type="text" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
                 </div>
-                <div class="input-field">
-                    <input id="emulatorArgs" type="text">
-                    <label for="emulatorArgs" class="active">Arguments</label>
+                <div class="mb-4">
+                    <label for="emulatorArgs" class="block text-sm font-medium text-gray-700 mb-1">Arguments</label>
+                    <input id="emulatorArgs" type="text" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
                 </div>
             </form>
-        </div>
-        <div class="modal-footer">
-            <a href="#!" class="modal-close btn-flat">Cancel</a>
-            <a href="#!" id="emulatorFormSubmit" class="btn green">Save</a>
+            <div class="mt-6 flex justify-end space-x-3">
+                <button type="button" onclick="closeModal('emulatorDialog')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">Cancel</button>
+                <button type="button" id="emulatorFormSubmit" class="px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Save</button>
+            </div>
         </div>
     </div>
 
     <!-- FAB for navigating back to Games page -->
-    <a id="goToGamesBtn" class="btn-floating btn-large waves-effect waves-light blue fab-secondary" href="games.html" title="Back to Games">
+    <a id="goToGamesBtn" class="fixed bottom-24 right-6 md:bottom-10 md:right-24 bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-full shadow-lg transition-transform hover:scale-110 z-50" href="games.html" title="Back to Games">
         <i class="material-icons">games</i>
     </a>
     <!-- FAB for adding new emulators -->
-    <a id="addEmulatorBtn" class="btn-floating btn-large waves-effect waves-light green fab-main" title="Add Emulator">
+    <a id="addEmulatorBtn" class="fixed bottom-6 right-6 md:bottom-10 md:right-10 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg transition-transform hover:scale-110 z-50" title="Add Emulator">
         <i class="material-icons">add</i>
     </a>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        // Basic Tailwind Toast Function (Example)
+        function showAppToast(message, type = 'info', duration = 4000) {
+            const toastContainer = document.getElementById('toast-container');
+            if (!toastContainer) {
+                console.warn('Toast container not found');
+                alert(`${type.toUpperCase()}: ${message}`); // Fallback
+                return;
+            }
+
+            const toast = document.createElement('div');
+            let bgColor = 'bg-blue-600'; // Default info
+            let textColor = 'text-white';
+            if (type === 'error') bgColor = 'bg-red-600';
+            if (type === 'success') bgColor = 'bg-green-600';
+            if (type === 'warn') { bgColor = 'bg-yellow-400'; textColor = 'text-black';}
+
+            toast.className = `${bgColor} ${textColor} p-4 rounded-lg shadow-xl transition-all duration-300 ease-in-out transform translate-x-full opacity-0 max-w-sm`;
+            toast.textContent = message;
+            
+            toastContainer.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-x-full', 'opacity-0');
+                toast.classList.add('translate-x-0', 'opacity-100');
+            });
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+                 setTimeout(() => {
+                    toast.classList.add('translate-x-full'); // Slide out
+                    setTimeout(() => toast.remove(), 300);
+                }, 150); // Wait for fade before slide
+            }, duration);
+        }
+
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+    </script>
     <script type="module">
         const state = {
             platforms: [], // Will store {id, name} for platform selection
@@ -123,13 +151,7 @@
             }
         };
 
-        function showToast(message, type = 'info', duration = 4000) {
-            let colorClass = '';
-            if (type === 'error') colorClass = 'red';
-            if (type === 'success') colorClass = 'green';
-            M.toast({html: message, classes: colorClass, displayLength: duration});
-            // console.log(`[Toast FE - ${type.toUpperCase()}]: ${message}`); // Removed general log
-        }
+        const showToast = window.showAppToast; // Use the global toast function
 
         async function fetchPlatforms() {
             try {
@@ -150,8 +172,8 @@
             // console.log('[Emulators FE] Initiating loadAndDisplayEmulators...'); // Removed general log
             state.isLoading = true;
             state.error = null;
-            document.getElementById('loadingIndicator').style.display = 'block';
-            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('loadingIndicator').classList.remove('hidden');
+            document.getElementById('errorMessage').classList.add('hidden');
             document.getElementById('emulatorsContainer').innerHTML = '';
 
             try {
@@ -168,7 +190,7 @@
                     // console.error('[Emulators FE] Failed to parse responseText as JSON:', e); // Removed general log
                     state.error = 'Failed to parse emulator data from server. Check console.';
                     document.getElementById('errorMessage').textContent = state.error;
-                    document.getElementById('errorMessage').style.display = 'block';
+                    document.getElementById('errorMessage').classList.remove('hidden');
                     showToast(state.error, 'error');
                     return;
                 }
@@ -187,7 +209,7 @@
                     state.error = apiData.message || 'API request was not successful or data is missing.';
                     // console.error('[Emulators FE] API Error:', state.error); // Removed general log
                     document.getElementById('errorMessage').textContent = state.error;
-                    document.getElementById('errorMessage').style.display = 'block';
+                    document.getElementById('errorMessage').classList.remove('hidden');
                     showToast(state.error, 'error');
                 }
 
@@ -195,11 +217,11 @@
                 // console.error('[Emulators FE] General JavaScript error in loadAndDisplayEmulators:', error); // Removed general log
                 state.error = `A critical error occurred: ${error.message}. Check console.`;
                 document.getElementById('errorMessage').textContent = state.error;
-                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('errorMessage').classList.remove('hidden');
                 showToast(state.error, 'error');
             } finally {
                 state.isLoading = false;
-                document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('loadingIndicator').classList.add('hidden');
             }
         }
 
@@ -208,7 +230,7 @@
             container.innerHTML = ''; // Clear previous
 
             if (Object.keys(state.emulatorsByPlatform).length === 0) {
-                container.innerHTML = '<p>No emulators found or data is not in the expected format.</p>';
+                container.innerHTML = '<p class="text-gray-600">No emulators found or data is not in the expected format.</p>';
                 // console.warn('[Emulators FE] renderEmulators: state.emulatorsByPlatform is empty.'); // Removed general log
                 return;
             }
@@ -236,41 +258,43 @@
                 const platformDisplayName = platformInfo ? platformInfo.name : platformId;
 
                 const platformSection = document.createElement('div');
-                platformSection.innerHTML = `<h5 class="platform-header">${platformDisplayName}</h5>`;
+                platformSection.className = 'mb-8';
+                platformSection.innerHTML = `<h3 class="text-xl font-semibold text-gray-700 bg-gray-200 p-3 rounded-t-md">${platformDisplayName}</h3>`;
                 
                 const table = document.createElement('table');
-                table.className = 'highlight responsive-table';
+                table.className = 'min-w-full bg-white shadow-md rounded-b-md overflow-hidden';
                 table.innerHTML = `
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Command</th>
-                            <th>Description</th>
-                            <th>Actions</th>
+                    <thead class="bg-gray-50">
+                        <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-6 py-3">ID</th>
+                            <th class="px-6 py-3">Name</th>
+                            <th class="px-6 py-3">Command</th>
+                            <th class="px-6 py-3">Description</th>
+                            <th class="px-6 py-3">Actions</th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody class="divide-y divide-gray-200"></tbody>
                 `;
                 const tbody = table.querySelector('tbody');
 
                 if (Array.isArray(emus)) { // THIS IS THE CHECK BEFORE YOUR LINE 280
                     if (emus.length === 0) {
-                        tbody.innerHTML = `<tr><td colspan="5">No emulators configured for this platform.</td></tr>`;
+                        tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">No emulators configured for this platform.</td></tr>`;
                     } else {
                         emus.forEach(emulator => { // INNER LOOP (like line 280)
                             // console.log('[Emulators FE] Processing emulator object:', JSON.parse(JSON.stringify(emulator))); // Removed general log
                             const row = document.createElement('tr');
+                            row.className = "hover:bg-gray-50";
                             row.innerHTML = `
-                                <td>${emulator.emulator_id || 'N/A'}</td>
-                                <td>${emulator.name || 'N/A'}</td>
-                                <td>${emulator.command || 'N/A'}</td>
-                                <td>${emulator.description || 'N/A'}</td>
-                                <td>
-                                    <button class="btn-flat blue-text edit-emulator-btn" data-platform-id="${platformId}" data-emulator-id="${emulator.emulator_id}" title="Edit">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${emulator.emulator_id || 'N/A'}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${emulator.name || 'N/A'}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${emulator.command || 'N/A'}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${emulator.description || 'N/A'}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                    <button class="text-blue-600 hover:text-blue-800 edit-emulator-btn" data-platform-id="${platformId}" data-emulator-id="${emulator.emulator_id}" title="Edit">
                                         <i class="material-icons">edit</i>
                                     </button>
-                                    <button class="btn-flat red-text delete-emulator-btn" data-platform-id="${platformId}" data-emulator-id="${emulator.emulator_id}" title="Delete">
+                                    <button class="text-red-600 hover:text-red-800 delete-emulator-btn" data-platform-id="${platformId}" data-emulator-id="${emulator.emulator_id}" title="Delete">
                                         <i class="material-icons">delete</i>
                                     </button>
                                 </td>
@@ -280,7 +304,7 @@
                     }
                 } else {
                     // console.error(`[Emulators FE] CRITICAL ERROR: 'emus' for platformId '${platformId}' is NOT an array. It is a ${typeof emus}. Value:`, emus); // Removed general log
-                    tbody.innerHTML = `<tr><td colspan="5" class="red-text">Error: Emulator data for ${platformId} is not in the expected array format. Check console.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-4 whitespace-nowrap text-sm text-red-600">Error: Emulator data for ${platformId} is not in the expected array format. Check console.</td></tr>`;
                 }
                 platformSection.appendChild(table);
                 container.appendChild(platformSection);
@@ -299,24 +323,22 @@
             form.reset(); // Clear previous values
 
             // Create platform dropdown for "Add" mode
-            const platformIdFieldContainer = document.createElement('div');
-            platformIdFieldContainer.className = 'input-field';
-            platformIdFieldContainer.id = 'platformSelectContainer';
+            let platformIdFieldContainer = form.querySelector('#platformSelectContainer');
+            if (platformIdFieldContainer) platformIdFieldContainer.remove();
 
             if (mode === 'add') {
+                platformIdFieldContainer = document.createElement('div');
+                platformIdFieldContainer.className = 'mb-4';
+                platformIdFieldContainer.id = 'platformSelectContainer';
                 let options = state.platforms.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
                 platformIdFieldContainer.innerHTML = `
-                    <select id="dialogPlatformId" required>
+                    <label for="dialogPlatformId" class="block text-sm font-medium text-gray-700 mb-1">Platform</label>
+                    <select id="dialogPlatformId" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md">
                         <option value="" disabled selected>Choose platform</option>
                         ${options}
                     </select>
-                    <label for="dialogPlatformId">Platform</label>
                 `;
-                // Prepend to form if it's not there or replace if it is
-                const existingPlatSelect = form.querySelector('#platformSelectContainer');
-                if (existingPlatSelect) existingPlatSelect.remove();
                 form.prepend(platformIdFieldContainer);
-                M.FormSelect.init(document.getElementById('dialogPlatformId'));
             } else {
                  const existingPlatSelect = form.querySelector('#platformSelectContainer');
                 if (existingPlatSelect) existingPlatSelect.remove(); // Remove if switching from add
@@ -332,8 +354,7 @@
             // Disable emulatorId field if editing
             document.getElementById('emulatorId').disabled = (mode === 'edit');
 
-            M.updateTextFields(); // Important for Materialize labels
-            M.Modal.getInstance(document.getElementById('emulatorDialog')).open();
+            openModal('emulatorDialog');
         }
 
         // Placeholder for submit logic
@@ -347,7 +368,7 @@
             }
             showToast(`Form submit: Mode=${state.currentEdit.mode}, Platform=${platformId}, EmulatorID=${emulatorId}`, 'info');
             // TODO: Implement actual API call for add/update
-            M.Modal.getInstance(document.getElementById('emulatorDialog')).close();
+            closeModal('emulatorDialog');
             // await loadAndDisplayEmulators(); // Refresh list
         });
 
@@ -378,8 +399,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // M.Sidenav.init(document.querySelectorAll('.sidenav'), {edge: 'left'}); // Sidenav removed
-            M.Modal.init(document.querySelectorAll('.modal'));
+            // No Materialize init needed
 
             document.getElementById('addEmulatorBtn').addEventListener('click', () => {
                 if (state.platforms.length === 0) {

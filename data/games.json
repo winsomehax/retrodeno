@@ -427,12 +427,12 @@
   },
   "ghostbusters": {
     "title": "Ghostbusters",
-    "overview": "",
-    "description": "",
-    "cover_image_path": "",
+    "description": "When there&#x27;s something strange in your neighborhood ...who ya gonna call? Ghostbusters for your Atari 2600!\n\nWith a $5,000 loan from the bank, you&#x27;re out to start your own ghostbusting business. You make money by catching ghosts and must earn more than $10,000 before the dangerous psychokinetic (PK) energy emissions reach critical mass.",
+    "cover_image_path": "https://cdn.thegamesdb.net/images/large/boxart/front/1292-1.jpg",
     "platforms": {
-      "c64": "/home/gdo/ROMs/c64/Ghostbusters (3133).zip"
-    }
+      "commodore-64": ""
+    },
+    "updated_at": "2025-05-24T22:30:07.501Z"
   },
   "amcattackofthemutantcamels": {
     "title": "Attack of the Mutant Camels",
@@ -593,7 +593,7 @@
     "platforms": {
       "commodore-64": ""
     },
-    "updated_at": "2025-05-24T20:02:52.784Z"
+    "updated_at": "2025-05-24T20:54:46.836Z"
   },
   "zorkquestiassaultonegrethcastle": {
     "title": "Zork Quest I - Assault on Egreth Castle",
