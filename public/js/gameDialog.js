@@ -1,7 +1,7 @@
 // Assuming showAppToast, openModal, closeModal, showLoadingOverlay are globally available
 // or passed in. For simplicity, we'll rely on them being global here.
 // Import retroNodeState for platform list and TheGamesDB platform mapping
-import retroNodeState from '/js/state.js'; 
+import retroNodeState from './state.js'; 
 import { showToastAndLog } from './gameUtils.js';
 
 
