@@ -28,31 +28,31 @@ export function openGameDialog(mode, game = {}, originalIndex = null, onFormSubm
     
     form.innerHTML = `
         <div>
-            <label for="gameTitle" class="block text-sm font-medium text-gray-700">Title</label>
-            <input id="gameTitle" type="text" value="${game.title || ''}" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            <label for="gameTitle" class="block text-sm font-medium text-slate-300">Title</label>
+            <input id="gameTitle" type="text" value="${game.title || ''}" required class="mt-1 block w-full px-3 py-2 bg-slate-700 border border-slate-600 text-slate-200 placeholder-slate-400 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm">
         </div>
         <div>
-            <label for="gameDescription" class="block text-sm font-medium text-gray-700">Description</label>
-            <textarea id="gameDescription" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">${game.description || ''}</textarea>
+            <label for="gameDescription" class="block text-sm font-medium text-slate-300">Description</label>
+            <textarea id="gameDescription" rows="3" class="mt-1 block w-full px-3 py-2 bg-slate-700 border border-slate-600 text-slate-200 placeholder-slate-400 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm">${game.description || ''}</textarea>
         </div>
         <div>
-            <label for="gameCover" class="block text-sm font-medium text-gray-700">Cover Image URL</label>
-            <input id="gameCover" type="url" value="${game.cover_image_path || ''}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            <label for="gameCover" class="block text-sm font-medium text-slate-300">Cover Image URL</label>
+            <input id="gameCover" type="url" value="${game.cover_image_path || ''}" class="mt-1 block w-full px-3 py-2 bg-slate-700 border border-slate-600 text-slate-200 placeholder-slate-400 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm">
         </div>
         <div>
-            <label for="gamePlatforms" class="block text-sm font-medium text-gray-700">Platforms</label>
-            <select id="gamePlatforms" multiple class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md h-32">
+            <label for="gamePlatforms" class="block text-sm font-medium text-slate-300">Platforms</label>
+            <select id="gamePlatforms" multiple class="mt-1 block w-full pl-3 pr-10 py-2 text-base bg-slate-700 border border-slate-600 text-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm rounded-md h-32 appearance-none">
                 ${platformOptions}
             </select>
         </div>
         <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-            <button id="askAiBtnDialog" type="button" class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400">
+            <button id="askAiBtnDialog" type="button" class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-black bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-orange-400">
                 <i class="material-icons mr-2 -ml-1">smart_toy</i>Ask AI
             </button>
-            <button id="igdbDialogImportBtnDialog" type="button" class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400">
+            <button id="igdbDialogImportBtnDialog" type="button" class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-purple-500">
                 <i class="material-icons mr-2 -ml-1">image_search</i>IGDB
             </button>
-            <button id="theGamesDBDialogImportBtnDialog" type="button" class="w-full sm:col-span-2 lg:col-span-1 flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-400">
+            <button id="theGamesDBDialogImportBtnDialog" type="button" class="w-full sm:col-span-2 lg:col-span-1 flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-sky-500">
                 <i class="material-icons mr-2 -ml-1">storage</i>TheGamesDB
             </button>
         </div>
@@ -118,7 +118,7 @@ function attachIgdbSearchHandler() {
             igdbDialogBtn.disabled = true;
             igdbDialogBtn.innerHTML = '<span class="animate-spin inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2"></span> Searching IGDB...';
             const resultsDiv = document.getElementById('igdbInlineResultsDialog');
-            resultsDiv.innerHTML = '<div class="text-center py-2"><div class="inline-block animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-500"></div></div>';
+            resultsDiv.innerHTML = '<div class="text-center py-2"><div class="inline-block animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-purple-500"></div></div>';
             try {
                 const igdbResp = await fetch('/api/igdb/game', {
                     method: 'POST',
@@ -137,33 +137,33 @@ function attachIgdbSearchHandler() {
                         const imageOptions = images.slice(0,3).map((img, i) => 
                             `<label class='mr-2 cursor-pointer inline-block relative'>
                                 <input type='radio' name='igdbCoverDialog${idx}' value='${img.url}' ${i===0?'checked':''} class='sr-only peer'>
-                                <img src='${img.url}' data-full='${img.url.replace("t_thumb","t_1080p")}' class='igdb-cover-thumb-dialog w-12 h-12 object-cover rounded border-2 border-gray-300 peer-checked:border-blue-500 peer-checked:ring-2 peer-checked:ring-blue-500 transition-all' style='margin-bottom:2px;'>
-                                <span class='block text-xs text-center text-gray-500'>${img.type}</span>
-                                <span class='hidden peer-checked:block absolute top-0.5 right-0.5 bg-blue-500 text-white rounded-full w-4 h-4 text-xs leading-4 text-center'>✓</span>
+                                <img src='${img.url}' data-full='${img.url.replace("t_thumb","t_1080p")}' class='igdb-cover-thumb-dialog w-12 h-12 object-cover rounded border-2 border-slate-500 peer-checked:border-orange-500 peer-checked:ring-2 peer-checked:ring-orange-500 transition-all' style='margin-bottom:2px;'>
+                                <span class='block text-xs text-center text-slate-400'>${img.type}</span>
+                                <span class='hidden peer-checked:block absolute top-0.5 right-0.5 bg-orange-500 text-black rounded-full w-4 h-4 text-xs leading-4 text-center'>✓</span>
                             </label>`
                         ).join('');
 
-                        const rating = game.rating ? `<span class='text-sm text-gray-600'>Rating: ${game.rating.toFixed(1)}</span>` : '';
-                        const summary = game.summary ? `<div class='text-sm text-gray-700 mt-1 max-h-20 overflow-y-auto'>${game.summary.substring(0, 180)}${game.summary.length > 180 ? '...' : ''}</div>` : '';
-                        const video = (game.videos && game.videos[0]) ? `<a href='https://youtube.com/watch?v=${game.videos[0].video_id}' target='_blank' class="text-blue-500 hover:text-blue-700">🎬</a>` : '';
+                        const rating = game.rating ? `<span class='text-sm text-slate-400'>Rating: ${game.rating.toFixed(1)}</span>` : '';
+                        const summary = game.summary ? `<div class='text-sm text-slate-300 mt-1 max-h-20 overflow-y-auto custom-scrollbar'>${game.summary.substring(0, 180)}${game.summary.length > 180 ? '...' : ''}</div>` : '';
+                        const video = (game.videos && game.videos[0]) ? `<a href='https://youtube.com/watch?v=${game.videos[0].video_id}' target='_blank' class="text-purple-400 hover:text-purple-300">🎬</a>` : '';
                         
                         resultsDiv.innerHTML += `
-                            <div class='border border-gray-200 p-3 rounded-md shadow-sm'>
+                            <div class='border border-slate-700 bg-slate-700/30 p-3 rounded-md shadow-sm'>
                                 <div class='flex items-start gap-3'>
                                     <div class='flex-shrink-0'>
-                                        <div class='igdb-image-options-dialog flex flex-wrap gap-1' data-idx='${idx}'>${imageOptions || '<span class="text-xs text-gray-400">No images</span>'}</div>
+                                        <div class='igdb-image-options-dialog flex flex-wrap gap-1' data-idx='${idx}'>${imageOptions || '<span class="text-xs text-slate-500">No images</span>'}</div>
                                     </div>
                                     <div class='flex-grow'>
-                                        <h4 class='font-semibold text-gray-800'>${game.name} ${rating} ${video}</h4>
+                                        <h4 class='font-semibold text-slate-200'>${game.name} ${rating} ${video}</h4>
                                         ${summary}
                                     </div>
-                                    <button class='flex-shrink-0 self-start px-3 py-1.5 text-xs font-medium text-white bg-blue-500 hover:bg-blue-600 rounded shadow-sm igdb-import-btn-dialog' data-idx='${idx}'>Import</button>
+                                    <button class='flex-shrink-0 self-start px-3 py-1.5 text-xs font-medium text-white bg-purple-600 hover:bg-purple-700 rounded shadow-sm igdb-import-btn-dialog' data-idx='${idx}'>Import</button>
                                 </div>
-                                <div class='mt-2 text-xs space-x-2'>
-                                    <label class="inline-flex items-center"><input type='checkbox' class='igdb-field-dialog rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 mr-1' data-field='cover' checked> Cover</label>
-                                    <label class="inline-flex items-center"><input type='checkbox' class='igdb-field-dialog rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 mr-1' data-field='name' checked> Title</label>
-                                    <label class="inline-flex items-center"><input type='checkbox' class='igdb-field-dialog rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 mr-1' data-field='summary' checked> Summary</label>
-                                    <label class="inline-flex items-center"><input type='checkbox' class='igdb-field-dialog rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 mr-1' data-field='rating' ${game.rating ? 'checked' : 'disabled'}> Rating</label>
+                                <div class='mt-2 text-xs space-x-2 text-slate-400'>
+                                    <label class="inline-flex items-center"><input type='checkbox' class='igdb-field-dialog rounded border-slate-500 bg-slate-600 text-orange-500 shadow-sm focus:border-orange-400 focus:ring focus:ring-orange-400 focus:ring-opacity-50 mr-1' data-field='cover' checked> Cover</label>
+                                    <label class="inline-flex items-center"><input type='checkbox' class='igdb-field-dialog rounded border-slate-500 bg-slate-600 text-orange-500 shadow-sm focus:border-orange-400 focus:ring focus:ring-orange-400 focus:ring-opacity-50 mr-1' data-field='name' checked> Title</label>
+                                    <label class="inline-flex items-center"><input type='checkbox' class='igdb-field-dialog rounded border-slate-500 bg-slate-600 text-orange-500 shadow-sm focus:border-orange-400 focus:ring focus:ring-orange-400 focus:ring-opacity-50 mr-1' data-field='summary' checked> Summary</label>
+                                    <label class="inline-flex items-center"><input type='checkbox' class='igdb-field-dialog rounded border-slate-500 bg-slate-600 text-orange-500 shadow-sm focus:border-orange-400 focus:ring focus:ring-orange-400 focus:ring-opacity-50 mr-1' data-field='rating' ${game.rating ? 'checked' : 'disabled'}> Rating</label>
                                 </div>
                             </div>
                         `;
@@ -198,11 +198,11 @@ function attachIgdbSearchHandler() {
                     });
 
                 } else {
-                    resultsDiv.innerHTML = '<div class="p-3 bg-yellow-100 text-yellow-700 rounded-md text-sm">No IGDB results found.</div>';
+                    resultsDiv.innerHTML = '<div class="p-3 bg-slate-700 text-orange-300 rounded-md text-sm">No IGDB results found.</div>';
                 }
             } catch (e) {
                 console.error("Error fetching/rendering IGDB data in dialog:", e);
-                resultsDiv.innerHTML = `<div class="p-3 bg-red-100 text-red-700 rounded-md text-sm">Error fetching IGDB data: ${e.message}</div>`;
+                resultsDiv.innerHTML = `<div class="p-3 bg-red-800/50 text-red-300 rounded-md text-sm">Error fetching IGDB data: ${e.message}</div>`;
             }
             igdbDialogBtn.disabled = false;
             igdbDialogBtn.innerHTML = '<i class="material-icons mr-2 -ml-1">image_search</i>IGDB';
@@ -215,7 +215,7 @@ function handleDialogImagePreviewEnter(e) {
     if (!previewImg) {
         previewImg = document.createElement('img');
         previewImg.id = 'coverPreviewImgDialog';
-        previewImg.className = 'fixed z-[10001] hidden max-w-xs max-h-[70vh] shadow-2xl rounded-lg bg-white p-1 border border-gray-300 pointer-events-none'; // Higher z-index for dialog
+        previewImg.className = 'fixed z-[10001] hidden max-w-xs max-h-[70vh] shadow-2xl rounded-lg bg-slate-700 p-1 border border-slate-500 pointer-events-none'; // Higher z-index for dialog
         document.body.appendChild(previewImg);
     }
     previewImg.src = this.getAttribute('data-full') || this.src;
@@ -267,7 +267,7 @@ async function handleTheGamesDBSearchInDialog() {
 
     searchButton.disabled = true;
     searchButton.innerHTML = '<span class="animate-spin inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2"></span> Searching...';
-    resultsContainer.innerHTML = '<div class="text-center py-2"><div class="inline-block animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-green-500"></div></div>';
+    resultsContainer.innerHTML = '<div class="text-center py-2"><div class="inline-block animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-sky-500"></div></div>';
 
     try {
         const response = await fetch(`/api/thegamesdb/search?name=${encodeURIComponent(gameTitle)}`);
@@ -280,7 +280,7 @@ async function handleTheGamesDBSearchInDialog() {
         displayTheGamesDBResultsInDialog(data.results, resultsContainer);
     } catch (error) {
         console.error('Error searching TheGamesDB (dialog):', error);
-        resultsContainer.innerHTML = `<div class="p-3 bg-red-100 text-red-700 rounded-md text-sm">Error: ${error.message}</div>`;
+        resultsContainer.innerHTML = `<div class="p-3 bg-red-800/50 text-red-300 rounded-md text-sm">Error: ${error.message}</div>`;
     } finally {
         searchButton.disabled = false;
         searchButton.innerHTML = '<i class="material-icons mr-2 -ml-1">storage</i>TheGamesDB';
@@ -289,12 +289,12 @@ async function handleTheGamesDBSearchInDialog() {
 
 function displayTheGamesDBResultsInDialog(games, containerElement) {
     if (!games || games.length === 0) {
-        containerElement.innerHTML = '<div class="p-3 bg-yellow-100 text-yellow-700 rounded-md text-sm">No results found on TheGamesDB.</div>';
+        containerElement.innerHTML = '<div class="p-3 bg-slate-700 text-orange-300 rounded-md text-sm">No results found on TheGamesDB.</div>';
         return;
     }
-    let resultsHTML = '<h6 class="text-sm font-semibold text-gray-700 mb-2">TheGamesDB Results:</h6>';
+    let resultsHTML = '<h6 class="text-sm font-semibold text-slate-300 mb-2">TheGamesDB Results:</h6>';
     games.slice(0, 3).forEach((game, index) => {
-        const displayThumbnailUrl = game.boxart_thumb_url || game.boxart_large_url || '/img/default-cover.png';
+        const displayThumbnailUrl = game.boxart_thumb_url || game.boxart_large_url || '/img/default_cover_dark.png'; // Consider a dark default
         const releaseDateDisplay = game.release_date ? new Date(game.release_date).toLocaleDateString() : 'N/A';
         let platformDisplayName = 'N/A';
         if (game.platform && Array.isArray(retroNodeState.state.platforms)) {
@@ -304,15 +304,15 @@ function displayTheGamesDBResultsInDialog(games, containerElement) {
             platformDisplayName = `ID: ${game.platform}`; 
         }
         resultsHTML += `
-            <div class="border border-gray-200 p-3 rounded-md shadow-sm mb-2">
+            <div class="border border-slate-700 bg-slate-700/30 p-3 rounded-md shadow-sm mb-2">
                 <div class="flex items-start gap-3">
-                    <img src="${displayThumbnailUrl}" alt="${game.game_title || 'Cover'}" class="w-12 h-16 object-cover rounded border bg-gray-100">
+                    <img src="${displayThumbnailUrl}" alt="${game.game_title || 'Cover'}" class="w-12 h-16 object-cover rounded border border-slate-600 bg-slate-600">
                     <div class="flex-grow">
-                        <strong class="text-sm text-gray-800">${game.game_title || 'N/A'}</strong><br>
-                        <small class="text-xs text-gray-500">Platform: ${platformDisplayName} | Released: ${releaseDateDisplay}</small>
-                        ${game.overview ? `<p class="text-xs text-gray-600 mt-1 max-h-12 overflow-hidden">${game.overview.substring(0,100)}...</p>` : ''}
+                        <strong class="text-sm text-slate-200">${game.game_title || 'N/A'}</strong><br>
+                        <small class="text-xs text-slate-400">Platform: ${platformDisplayName} | Released: ${releaseDateDisplay}</small>
+                        ${game.overview ? `<p class="text-xs text-slate-300 mt-1 max-h-12 overflow-hidden custom-scrollbar">${game.overview.substring(0,100)}...</p>` : ''}
                     </div>
-                    <button class="flex-shrink-0 self-start px-3 py-1.5 text-xs font-medium text-white bg-green-500 hover:bg-green-600 rounded shadow-sm import-tgdb-dialog-btn" data-game-index="${index}" type="button">Import</button>
+                    <button class="flex-shrink-0 self-start px-3 py-1.5 text-xs font-medium text-white bg-sky-600 hover:bg-sky-700 rounded shadow-sm import-tgdb-dialog-btn" data-game-index="${index}" type="button">Import</button>
                 </div>
             </div>
         `;

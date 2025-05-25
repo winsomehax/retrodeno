@@ -154,12 +154,12 @@
   },
   "pottypigeon": {
     "title": "Potty Pigeon",
-    "overview": "",
-    "description": "Guide your pigeon to collect twigs and build a nest while avoiding dangers.",
-    "cover_image_path": "",
+    "description": "Make a suicide journey with our fluffy little friend Percy in his desperate attempts to build himself a cosy little home. Plunging to near certain destruction this crazy little bird has to pluck ten nest building twigs from the path of onrushing traffic, frantically avoiding the unwelcome attentions of a pigeon eating cat and starving ferret.\n\nOnce off the tarmac, the danger doesn’t end as Percy carefully avoids the kamikaze planes, balloons and twig snatching sparrows before he can complete his nest and move to the next level.\n\nBut don’t be totally disheartened, our loveable little character has a few surprises of his own in the shape of revolting explosive eggs.",
+    "cover_image_path": "https://cdn.thegamesdb.net/images/large/boxart/front/32293-1.jpg",
     "platforms": {
-      "c64": "/home/gdo/ROMs/c64/Potty Pigeon (5849).zip"
-    }
+      "commodore-64": ""
+    },
+    "updated_at": "2025-05-25T14:14:37.377Z"
   },
   "spellbound": {
     "title": "Spellbound",
@@ -181,12 +181,12 @@
   },
   "sanxion": {
     "title": "Sanxion",
-    "description": "Sanxion is a side-scrolling shoot &#x27;em up, the goal to traverse each level from left to right avoiding or destroying any enemies and obstacles. The side-scroller speed is controllable, increasing the closer the player is to the center of the screen. The screen is divided in two sections, the upper one with a cenital view, and the lower one, taking up two-thirds of the screen, shows a typical side view. Enemies can come from both sides of the screen in close formations that the player must avoid colliding with.",
-    "cover_image_path": "https://images.igdb.com/igdb/image/upload/t_cover_big/cmz0dbwc0us7qcpcmszm.jpg",
+    "description": "Pit your wits against the perils from the sky, fight against an alien empire intent on mankind&#x27;s destruction. Battle past numerous evil aggressors and aquire the skill and precision to fly through city defenses. Hone your fighting skills on the practice ranges and then, if you make the grade, enter the darkside...\n\nSanxion is a side-scrolling shoot &#x27;em up, the goal to traverse each level from left to right avoiding or destroying any enemies and obstacles. The side-scroller speed is controllable, increasing the closer the player is to the center of the screen. The screen is divided in two sections, the upper one with a cenital view, and the lower one, taking up two-thirds of the screen, shows a typical side view. Enemies can come from both sides of the screen in close formations that the player must avoid colliding with.",
+    "cover_image_path": "https://cdn.thegamesdb.net/images/large/boxart/front/7191-1.jpg",
     "platforms": {
-      "c64": ""
+      "commodore-64": ""
     },
-    "updated_at": "2025-05-23T16:49:35.861Z"
+    "updated_at": "2025-05-25T11:32:01.686Z"
   },
   "zorktheundiscoveredunderground": {
     "title": "Zork - The Undiscovered Underground",
@@ -534,12 +534,12 @@
   },
   "delta": {
     "title": "Delta",
-    "overview": "",
-    "description": "",
-    "cover_image_path": "",
+    "description": "This horizontally scrolling shoot &#x27;em up with 32 levels is something of a predecessor to Armalyte. It&#x27;s set in the Delta region of space, in which the Hsiffan Khanate species have a powerful presence, using their technology to steal and analyze Terran ships.",
+    "cover_image_path": "https://cdn.thegamesdb.net/images/large/boxart/front/6788-1.jpg",
     "platforms": {
-      "c64": "/home/gdo/ROMs/c64/Delta (2092).zip"
-    }
+      "commodore-64": ""
+    },
+    "updated_at": "2025-05-25T13:05:44.122Z"
   },
   "skateordie!": {
     "title": "Skate or Die!",
@@ -593,7 +593,7 @@
     "platforms": {
       "commodore-64": ""
     },
-    "updated_at": "2025-05-24T20:54:46.836Z"
+    "updated_at": "2025-05-25T11:30:38.553Z"
   },
   "zorkquestiassaultonegrethcastle": {
     "title": "Zork Quest I - Assault on Egreth Castle",

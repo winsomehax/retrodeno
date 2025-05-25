@@ -42,9 +42,9 @@ const writeJsonFile = async (filePath, data) => {
  * Path constants for data files
  */
 const PATHS = {
-  GAMES: path.join(currentDir, '../data/games.json'),
-  PLATFORMS: path.join(currentDir, '../data/platforms.json'),
-  EMULATORS: path.join(currentDir, '../data/emulators.json') // Though emulators.json doesn't seem to be used directly by controllers
+  GAMES: path.join(currentDir, '../public/data/games.json'),
+  PLATFORMS: path.join(currentDir, '../public/data/platforms.json'),
+  EMULATORS: path.join(currentDir, '../public/data/emulators.json') // Though emulators.json doesn't seem to be used directly by controllers
 };
 
 export {

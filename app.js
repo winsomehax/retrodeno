@@ -26,6 +26,12 @@ const PORT = Deno.env.get("PORT") || 3000;
 // Global middleware
 app.use(compression());
 app.use(express.json());
+
+// Specific static route for /img to serve from public/data/img
+// This will handle requests like /img/default_cover_dark.png
+app.use('/img', express.static(path.join(moduleDir, 'public', 'data', 'img')));
+
+// General static route for other assets in public (like JS, CSS, root HTML files)
 app.use(express.static(path.join(moduleDir, 'public'), {
   maxAge: '1d',
   etag: true,
@@ -42,7 +48,7 @@ app.use('/api/', apiLimiter);
 
 // Removed general request body debugging middleware
 // Routes
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.sendFile(path.join(moduleDir, 'public', 'games.html'));
 });
 
@@ -94,7 +100,7 @@ app.get('/api/thegamesdb/search', async (req, res, next) => {
 });
 
 // 404 handler
-app.use((req, res, next) => {
+app.use((req, res, _next) => {
   res.status(404).json({ 
     success: false,
     error: 'Not Found',

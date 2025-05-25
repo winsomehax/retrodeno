@@ -10,7 +10,7 @@ class EmulatorController {
     this.launchEmulator = this.launchEmulator.bind(this);
   }
 
-  async getEmulators(req, res, next) {
+  async getEmulators(_req, res, next) {
     try {
       const platformsJson = await readJsonFile(PATHS.PLATFORMS);
       const emulators = {};
